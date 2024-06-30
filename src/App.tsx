@@ -15,6 +15,7 @@ import TestDashboard from "./Modules/TestModule/Components/TestDashboard/TestDas
 import TDashboardLayout from "./Modules/SharedModules/Components/Layouts/TDashboardLayout/TDashboardLayout";
 import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes";
 import TestResults from "./Modules/TestModule/Components/TestResults";
+import SignInUp from "./Modules/AuthModule/Components/SignIn-up/SignInUp";
 
 export default function App() {
   const routes = createBrowserRouter([
@@ -24,12 +25,17 @@ export default function App() {
       errorElement: <NoData />,
       children: [
         {
-          index: true,
-          element: <Login />,
-        },
-        {
-          path: "register",
-          element: <Register />,
+          element: <SignInUp />,
+          children: [
+            {
+              index: true,
+              element: <Login />,
+            },
+            {
+              path: "register",
+              element: <Register />,
+            },
+          ],
         },
         {
           path: "forget-password",
