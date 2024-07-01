@@ -1,0 +1,30 @@
+.bgAuth {
+  background-image: url("../../../assets//images/bg-auth.svg");
+  height: 95vh;
+  background-size: 90% 100%;
+  background-repeat: no-repeat;
+  /* backgr */
+}
+
+@media (max-width: 1024px) {
+  .resSrc {
+    background-image: url("../../../assets//images/bg-auth.svg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: color;
+    min-height: 100vh !important;
+    border-image: fill 0 linear-gradient(rgba(0, 0, 0, 0.418), #000);
+    color: #fff;
+  }
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}

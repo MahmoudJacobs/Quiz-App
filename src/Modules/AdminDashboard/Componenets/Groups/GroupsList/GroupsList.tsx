@@ -1,106 +1,53 @@
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import ResponsivePagination from "react-responsive-pagination";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
-import { getBaseUrl } from "../../../../../Utils/Utils";
-import NoData from "../../../../SharedModules/Components/NoData/NoData";
-import style from "../Groups.module.css";
+import { useForm } from "react-hook-form";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
+import NoData from "../../../../SharedModules/Components/NoData/NoData";
+import { getBaseUrl } from "../../../../../Utils/Utils";
+import style from "../Groups.module.css";
 
 const GroupsList = () => {
   const token =
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjdkNTVlNmM4NWYxZWNkYmMyNmY1YzIiLCJlbWFpbCI6Im9tYXJiYXplZWRAZ21haWwuY29tIiwicm9sZSI6Ikluc3RydWN0b3IiLCJpYXQiOjE3MTk2NzE4NzUsImV4cCI6MTcyMzI3MTg3NX0.HQjkFkOkJDB1pr01-_4YgK5DcKs--7k8jSvXP4IP8rE";
   const animatedComponents = makeAnimated();
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
-  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
-  const [groupId, setGroupId] = useState<string>("");
-  const [studentsIDS, setStudentsIDS] = useState<any[]>([]);
-  const [selectedStudents, setSelectedStudents] = useState<any[]>([]);
-
-  const [groups, setGroups] = useState<
-    {
-      _id: string;
-      name: string;
-      students: any[];
-    }[]
-  >([
-    {
-      _id: "",
-      name: "",
-      students: [],
-    },
-  ]);
-
-  const handleClose = () => {
-    setOpenAddModal(false);
-    setOpenEditModal(false);
-    setOpenDeleteModal(false);
-  };
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [groupId, setGroupId] = useState("");
+  const [studentsIDS, setStudentsIDS] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
+  const [selectedStudents, setSelectedStudents] = useState([]);
 
   const getAllStudents = useCallback(async () => {
     try {
-      const res = await axios.get(`${getBaseUrl()}/api/student`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `https://upskilling-egypt.com:3005/api/student`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       setStudentsIDS(
-        res.data.map((student: { _id: string; first_name: string }) => ({
+        res.data.map((student) => ({
           value: student._id,
           label: student.first_name,
         }))
       );
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching students:", error);
     }
   }, [token]);
-
-  const handleDelete = async () => {
-    try {
-      const res = await axios.delete(
-        `https://upskilling-egypt.com:3005/api/group/${groupId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log(res);
-      getAllGroups();
-    } catch (error) {
-      console.error("Error deleting group:", error);
-    }
-  };
-
-  const handleAdd = async () => {
-    try {
-      const res = await axios.post(
-        `https://upskilling-egypt.com:3005/api/group`,
-        {
-          name: "New Group",
-          students: selectedStudents,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log(res);
-      getAllGroups();
-    } catch (error) {
-      alert(error.response.data.message);
-    }
-  };
 
   const getAllGroups = useCallback(async () => {
     try {
@@ -117,15 +64,77 @@ const GroupsList = () => {
   }, [token]);
 
   useEffect(() => {
-    getAllGroups();
     getAllStudents();
-  }, [getAllGroups, getAllStudents]);
+    getAllGroups();
+  }, [getAllStudents, getAllGroups]);
+
+  const onSubmit = async (formData) => {
+    if (openDeleteModal) {
+      await handleDelete();
+    } else if (openEditModal) {
+      await handleEdit(formData);
+    } else if (openAddModal) {
+      await handleAdd(formData);
+    }
+  };
+
+  const handleClose = () => {
+    setOpenAddModal(false);
+    setOpenEditModal(false);
+    setOpenDeleteModal(false);
+    reset(); // Reset form fields on modal close
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `https://upskilling-egypt.com:3005/api/group/${groupId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(res);
+      getAllGroups();
+      handleClose();
+    } catch (error) {
+      console.error("Error deleting group:", error);
+    }
+  };
+
+  const handleAdd = async (formData) => {
+    try {
+      const res = await axios.post(
+        `https://upskilling-egypt.com:3005/api/group`,
+        {
+          name: formData.groupName,
+          students: selectedStudents.map((student) => student.value),
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(res);
+      getAllGroups();
+      handleClose();
+    } catch (error) {
+      alert(error.response.data.message);
+      console.error("Error adding group:", error);
+    }
+  };
+
+  const handleEdit = async (formData) => {
+    // Implement edit functionality if needed
+    console.log("Edit functionality not implemented");
+    handleClose();
+  };
 
   return (
     <div>
-      <div
-        className={`project-body head-bg mt-5 container rounded-4 shadow px-4 py-5`}
-      >
+      <div className="project-body head-bg mt-5 container rounded-4 shadow px-4 py-5">
         <div>
           <div className="flex items-center justify-end">
             <button
@@ -158,7 +167,7 @@ const GroupsList = () => {
                       </span>
                     </div>
                     <div
-                      className={`${style.col} flex items-center justify-center sm:justify-end`}
+                      className={`${style.col} p-0 flex items-between justify-center sm:justify-end`}
                       data-label="Actions :"
                     >
                       <ul className="flex items-center justify-center m-0 p-0">
@@ -193,104 +202,83 @@ const GroupsList = () => {
             </ul>
           </section>
         </div>
-        {/* Pagination */}
-        {/* <div className="mt-5">
-          <ResponsivePagination
-            current={1}
-            total={10}
-            onPageChange={(page) => {
-              setPageNumber(page);
-            }}
-          />
-        </div> */}
       </div>
-      {/*Modal */}
+      {/* Modal */}
       <Dialog
-        className="relative z-10"
+        className="fixed inset-0 z-50 overflow-y-auto"
         open={openAddModal || openDeleteModal || openEditModal}
         onClose={() => {
           setOpenAddModal(false);
           setOpenEditModal(false);
           setOpenDeleteModal(false);
+          reset();
         }}
       >
-        <DialogBackdrop
-          transition
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
-        />
+        <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-30" />
 
-        <div className="fixed inset-0 z-10 overflow-y-auto w-full">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 w-full">
-            <DialogPanel
-              transition
-              className="relative w-[90%] transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 min-h-[50vh]"
-            >
-              <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start w-full">
-                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                    <DialogTitle
-                      as="h3"
-                      className="text-base font-semibold leading-6 text-gray-900"
-                    >
-                      {openDeleteModal
-                        ? "Delete Group"
-                        : openEditModal
-                        ? "Edit Group"
-                        : "Add Group"}
-                    </DialogTitle>
-                    <div className="mt-2 w-full">
-                      <p className="text-sm text-gray-500 w-full">
-                        {openDeleteModal ? (
-                          "Are you sure you want to delete this group?"
-                        ) : openEditModal || openAddModal ? (
-                          <form className="flex-col w-full h-100 flex items-start justify-between">
-                            <input
-                              type="text"
-                              className="w-full p-2 bg-slate-200 my-2"
-                            />
-                            <Select
-                              closeMenuOnSelect={false}
-                              components={animatedComponents}
-                              isMulti
-                              options={studentsIDS}
-                              onChange={(e) => {
-                                setSelectedStudents(e.map((ele) => ele.value));
-                              }}
-                              className="my-2 pt-2 w-full"
-                            />
-                          </form>
-                        ) : (
-                          ""
-                        )}
-                      </p>
-                    </div>
+        <DialogPanel className="relative w-full max-w-md sm:max-w-lg m-auto mt-20 rounded-lg overflow-hidden bg-white shadow-lg">
+          <div className="p-4 sm:p-6">
+            <DialogTitle className="text-xl font-semibold text-gray-800">
+              {openDeleteModal
+                ? "Delete Group"
+                : openEditModal
+                ? "Edit Group"
+                : "Add Group"}
+            </DialogTitle>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+              {openDeleteModal ? (
+                <p className="text-sm text-gray-700">
+                  Are you sure you want to delete this group?
+                </p>
+              ) : (
+                <>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      {...register("groupName")}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Enter Group Name"
+                    />
                   </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <div className="mb-4">
+                    <Select
+                      closeMenuOnSelect={false}
+                      components={animatedComponents}
+                      isMulti
+                      options={studentsIDS}
+                      value={selectedStudents}
+                      onChange={(selectedOptions) =>
+                        setSelectedStudents(selectedOptions)
+                      }
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({
+                          ...base,
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+              <div className="flex justify-end">
                 <button
-                  type="button"
-                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                  onClick={() => {
-                    openDeleteModal && handleDelete();
-                    openEditModal && handleEdit();
-                    openAddModal && handleAdd();
-                  }}
+                  type="submit"
+                  className="mr-2 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   {openDeleteModal ? "Delete" : openEditModal ? "Edit" : "Add"}
                 </button>
                 <button
                   type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                   onClick={() => handleClose()}
-                  autoFocus
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                 >
                   Cancel
                 </button>
               </div>
-            </DialogPanel>
+            </form>
           </div>
-        </div>
+        </DialogPanel>
       </Dialog>
     </div>
   );

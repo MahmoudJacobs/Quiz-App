@@ -74,9 +74,11 @@
 
 .btn-toggle {
   z-index: 9999;
-  position: static;
+  position: absolute;
   border: none;
   background-color: transparent;
+  top: 37px;
+  left: 0;
 }
 
 .ps-collapsed .ps-menu-button:hover::before {
@@ -95,6 +97,10 @@
 
 /*Active Item*/
 li.ps-active {
-  border-right: 3px solid gray;
-  box-shadow: 2px 2px 2px gray;
+  border-bottom: 1px solid gray;
+  box-shadow: 1px 1px 1px gray;
+  a span i {
+    background-color: black !important;
+    color: white !important;
+  }
 }
