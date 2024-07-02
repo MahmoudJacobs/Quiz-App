@@ -107,3 +107,52 @@
   top: 22px;
   left: 25px;
 }
+
+/* YourStyle.module.css */
+
+.studentCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: black;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 4px;
+  text-transform: lowercase;
+}
+
+.studentCircle:hover {
+  background-color: #ffeddf;
+  color: black;
+}
+
+/* Tooltip styles */
+.studentCircle[title] {
+  position: relative;
+}
+
+.studentCircle[title]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  font-size: 12px;
+  padding: 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.studentCircle:hover[title]::after {
+  visibility: visible;
+  opacity: 1;
+}

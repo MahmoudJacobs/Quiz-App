@@ -1,17 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
-import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import NoData from "../../../../SharedModules/Components/NoData/NoData";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { toast } from "react-toastify";
+import {
+  GroupFormData,
+  GroupInterface,
+  StudentsInterface,
+} from "../../../../../InterFaces/InterFaces";
 import { getBaseUrl } from "../../../../../Utils/Utils";
+import NoData from "../../../../SharedModules/Components/NoData/NoData";
 import style from "../Groups.module.css";
 
 const GroupsList = () => {
@@ -21,12 +26,29 @@ const GroupsList = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [groupId, setGroupId] = useState("");
-  const [studentsIDS, setStudentsIDS] = useState([]);
-  const [groups, setGroups] = useState([]);
   const { register, handleSubmit, reset } = useForm();
-  const [selectedStudents, setSelectedStudents] = useState([]);
 
+  const [allStudents, setAllStudents] = useState<StudentsInterface[]>([
+    {
+      _id: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      status: false,
+      role: "",
+    },
+  ]);
+  const [groups, setGroups] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState<{
+    name: string;
+    _id: string;
+  }>({
+    name: "",
+    _id: "",
+  });
+
+  // get all students array
   const getAllStudents = useCallback(async () => {
     try {
       const res = await axios.get(
@@ -38,17 +60,20 @@ const GroupsList = () => {
         }
       );
 
-      setStudentsIDS(
-        res.data.map((student) => ({
+      setAllStudents(
+        res.data.map((student: StudentsInterface) => ({
           value: student._id,
           label: student.first_name,
         }))
       );
     } catch (error) {
-      console.log("Error fetching students:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "fail signin");
+      }
     }
   }, [token]);
 
+  // get all groups to display
   const getAllGroups = useCallback(async () => {
     try {
       const res = await axios.get(`${getBaseUrl()}/api/group`, {
@@ -57,18 +82,16 @@ const GroupsList = () => {
         },
       });
       setGroups(res.data);
+      console.log(res.data);
     } catch (error) {
-      console.error("Error fetching groups:", error);
-      toast.error("Failed to fetch groups");
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      }
     }
   }, [token]);
 
-  useEffect(() => {
-    getAllStudents();
-    getAllGroups();
-  }, [getAllStudents, getAllGroups]);
-
-  const onSubmit = async (formData) => {
+  // vaiable submmition for add , delete and edit
+  const onSubmit = async (formData: GroupFormData) => {
     if (openDeleteModal) {
       await handleDelete();
     } else if (openEditModal) {
@@ -77,39 +100,45 @@ const GroupsList = () => {
       await handleAdd(formData);
     }
   };
-
+  // close the modal for all
   const handleClose = () => {
     setOpenAddModal(false);
     setOpenEditModal(false);
     setOpenDeleteModal(false);
-    reset(); // Reset form fields on modal close
+    reset();
+    setSelectedGroup({ _id: "", name: "" });
   };
 
+  // delete the selected group
   const handleDelete = async () => {
     try {
       const res = await axios.delete(
-        `https://upskilling-egypt.com:3005/api/group/${groupId}`,
+        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      console.log(res);
       getAllGroups();
       handleClose();
+      toast.success(res.data.message);
     } catch (error) {
-      console.error("Error deleting group:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      }
     }
   };
-
-  const handleAdd = async (formData) => {
+  // add a new group
+  const handleAdd = async (formData: GroupFormData) => {
     try {
       const res = await axios.post(
         `https://upskilling-egypt.com:3005/api/group`,
         {
           name: formData.groupName,
-          students: selectedStudents.map((student) => student.value),
+          students: selectedStudents.map(
+            (student: { value: string }) => student.value
+          ),
         },
         {
           headers: {
@@ -117,81 +146,147 @@ const GroupsList = () => {
           },
         }
       );
-      console.log(res);
       getAllGroups();
       handleClose();
+      setSelectedGroup({ _id: "", name: "" });
+      toast.success(res.data.message);
     } catch (error) {
-      alert(error.response.data.message);
-      console.error("Error adding group:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      }
     }
   };
 
-  const handleEdit = async (formData) => {
-    // Implement edit functionality if needed
-    console.log("Edit functionality not implemented");
-    handleClose();
+  // edit the selected group
+  const handleEdit = async (formData: GroupFormData) => {
+    console.log(selectedGroup);
+    try {
+      const res = await axios.put(
+        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
+        {
+          name: formData.groupName,
+          students: selectedStudents.map(
+            (student: { value: string }) => student.value
+          ),
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      getAllGroups();
+      handleClose();
+      setSelectedGroup({ _id: "", name: "" });
+      toast.success(res.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      }
+    }
   };
 
+  useEffect(() => {
+    getAllStudents();
+    getAllGroups();
+  }, [getAllStudents, getAllGroups]);
+
+  // re-ender the app when the selected group changes to avoid the delay of changing the name of group
+  useEffect(() => {
+    reset();
+    setSelectedStudents(
+      allStudents.filter((student) =>
+        selectedGroup.students?.includes(student.value)
+      )
+    );
+  }, [selectedGroup, reset, allStudents]);
+
   return (
-    <div>
+    <div className="m-auto flex justify-center">
       <div className="project-body head-bg mt-5 container rounded-4 shadow px-4 py-5">
         <div>
           <div className="flex items-center justify-end">
+            {/*add btn */}
             <button
               className="border border-gray-600 rounded-2xl px-4 py-2"
               onClick={() => {
                 setOpenAddModal(true);
-                setOpenDeleteModal(false);
-                setOpenEditModal(false);
               }}
             >
               <i className="fa-solid fa-plus"></i> Add To Group
             </button>
           </div>
           <section className="my-4">
-            <h1>Groups List</h1>
+            <h1 className="mb-3 text-bold text-xl">Groups List</h1>
             <ul className={`${style.responsiveTableProjects}`}>
               {groups.length > 0 ? (
-                groups.map((group) => (
+                groups.map((group: GroupInterface) => (
                   <li
                     key={group._id}
                     className={`${style.tableRow} flex flex-col sm:flex-row items-center justify-between`}
                   >
                     <div
-                      className={`${style.col} flex flex-col`}
+                      className={`${style.col} flex flex-col gap-2`}
                       data-label="Name :"
                     >
-                      <span> {group.name} </span>
-                      <span className="text-gray-500 text-[15px]">
-                        no of students : {group.students.length}
+                      <span> {group?.name} </span>
+                      <span className="text-gray-500 text-[15px] flex items-center justify-start gap-2">
+                        <span>no of students :</span>
+                        {group?.students.map((studentId: string, index) => {
+                          const student: { label: string } = allStudents.find(
+                            (s) => s.value === studentId
+                          );
+
+                          return (
+                            <span
+                              key={index}
+                              className={`${style.studentCircle}`}
+                              title={student?.label}
+                            >
+                              {student?.label.charAt(0)}
+                            </span>
+                          );
+                        })}
                       </span>
                     </div>
                     <div
-                      className={`${style.col} p-0 flex items-between justify-center sm:justify-end`}
+                      className={`${style.col} p-0 flex items-between justify-start sm:justify-end`}
                       data-label="Actions :"
                     >
-                      <ul className="flex items-center justify-center m-0 p-0">
-                        <li
+                      <ul className="flex items-center justify-center m-0 p-0 gap-3">
+                        {/* Delete button */}
+                        <button
                           role="button"
                           className="mb-0"
                           onClick={() => {
-                            setGroupId(group._id);
-                            setOpenAddModal(false);
-                            setOpenEditModal(false);
                             setOpenDeleteModal(true);
+                            setSelectedGroup(group);
                           }}
                         >
                           <div className="flex items-center justify-center">
                             <i className="mx-2 fa-regular fa-trash-can"></i>
                             <span className="hidden sm:inline">Delete</span>
                           </div>
-                        </li>
-                        <li role="button" className="mb-0" onClick={() => {}}>
+                        </button>
+                        {/* Edit button */}
+                        <button
+                          role="button"
+                          className="mb-0"
+                          onClick={() => {
+                            setOpenEditModal(true);
+                            const filteredStudents = allStudents.filter(
+                              (student) =>
+                                group.students.includes(student.value)
+                            );
+                            setSelectedStudents(filteredStudents);
+                            setSelectedGroup(group);
+                          }}
+                        >
                           <div className="flex items-center justify-center">
                             <i className="mx-2 fa-regular fa-pen-to-square "></i>
                             <span className="hidden sm:inline">Edit</span>
                           </div>
-                        </li>
+                        </button>
                       </ul>
                     </div>
                   </li>
@@ -236,6 +331,7 @@ const GroupsList = () => {
                     <input
                       type="text"
                       {...register("groupName")}
+                      defaultValue={selectedGroup.name || ""}
                       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       placeholder="Enter Group Name"
                     />
@@ -245,11 +341,9 @@ const GroupsList = () => {
                       closeMenuOnSelect={false}
                       components={animatedComponents}
                       isMulti
-                      options={studentsIDS}
+                      options={allStudents}
                       value={selectedStudents}
-                      onChange={(selectedOptions) =>
-                        setSelectedStudents(selectedOptions)
-                      }
+                      onChange={(e) => setSelectedStudents(e)}
                       menuPortalTarget={document.body}
                       styles={{
                         menuPortal: (base) => ({
