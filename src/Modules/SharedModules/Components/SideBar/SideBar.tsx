@@ -72,73 +72,74 @@ export default function SideBar() {
                 ></i>
               </button>
             )}
+            <div className="flex w-full flex-col gap-8 mt-3">
+              <MenuItem
+                data-title="Home"
+                icon={
+                  <i
+                    className="fa-solid bg-[#FFEDDF] p-2 fa-1x text-2xl fa-house"
+                    style={{ fontSize: "25px" }}
+                  ></i>
+                }
+                component={<Link to="/dashboard" />}
+                className="mt-9 text-black"
+                onClick={() => handleActiveItem("Dashboard")}
+                active={activeSideBar === "Dashboard"}
+              >
+                Dashboard
+              </MenuItem>
+              <MenuItem
+                data-title="Students"
+                icon={
+                  <i className="fa-solid bg-[#FFEDDF] p-2 fa-1x text-2xl fa-users-gear"></i>
+                }
+                component={<Link to="/dashboard/Students" />}
+                className="mt-2 text-black"
+                onClick={() => handleActiveItem("Students")}
+                active={activeSideBar === "Students"}
+              >
+                Students
+              </MenuItem>
 
-            <MenuItem
-              data-title="Home"
-              icon={
-                <i
-                  className="fa-solid bg-[#FFEDDF] p-2 fa-1x md:text-2xl text-2xl fa-house"
-                  style={{ fontSize: "25px" }}
-                ></i>
-              }
-              component={<Link to="/dashboard" />}
-              className="mt-9 text-black"
-              onClick={() => handleActiveItem("Dashboard")}
-              active={activeSideBar === "Dashboard"}
-            >
-              Dashboard
-            </MenuItem>
-            <MenuItem
-              data-title="Students"
-              icon={
-                <i className="fa-solid bg-[#FFEDDF] p-2 fa-1x md:text-2xl text-2xl fa-users-gear"></i>
-              }
-              component={<Link to="/dashboard/Students" />}
-              className="mt-2 text-black"
-              onClick={() => handleActiveItem("Students")}
-              active={activeSideBar === "Students"}
-            >
-              Students
-            </MenuItem>
+              <MenuItem
+                data-title="Groups"
+                icon={
+                  <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-layer-group"></i>
+                }
+                component={<Link to="/dashboard/Groups" />}
+                className="mt-2 text-black"
+                onClick={() => handleActiveItem("Groups")}
+                active={activeSideBar === "Groups"}
+              >
+                Groups
+              </MenuItem>
 
-            <MenuItem
-              data-title="Groups"
-              icon={
-                <i className="fa-solid bg-[#FFEDDF] p-2 fa-1xmd:text-2xl text-2xl fa-layer-group"></i>
-              }
-              component={<Link to="/dashboard/Groups" />}
-              className="mt-2 text-black"
-              onClick={() => handleActiveItem("Groups")}
-              active={activeSideBar === "Groups"}
-            >
-              Groups
-            </MenuItem>
+              <MenuItem
+                data-title="Quizzes"
+                icon={
+                  <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-paste"></i>
+                }
+                component={<Link to="/dashboard/Quizzes" />}
+                className="mt-2 text-black"
+                onClick={() => handleActiveItem("Quizzes")}
+                active={activeSideBar === "Quizzes"}
+              >
+                Quizzes
+              </MenuItem>
 
-            <MenuItem
-              data-title="Quizzes"
-              icon={
-                <i className="fa-solid bg-[#FFEDDF] p-2 fa-1xmd:text-2xl text-2xl fa-sheet-plastic"></i>
-              }
-              component={<Link to="/dashboard/Quizzes" />}
-              className="mt-2 text-black"
-              onClick={() => handleActiveItem("Quizzes")}
-              active={activeSideBar === "Quizzes"}
-            >
-              Quizzes
-            </MenuItem>
-
-            <MenuItem
-              data-title="Results"
-              icon={
-                <i className="fa-solid bg-[#FFEDDF] p-2 fa-1xmd:text-2xl text-2xl fa-square-poll-vertical"></i>
-              }
-              component={<Link to="/dashboard/Results" />}
-              className="mt-2 text-black"
-              onClick={() => handleActiveItem("Results")}
-              active={activeSideBar === "Results"}
-            >
-              Results
-            </MenuItem>
+              <MenuItem
+                data-title="Results"
+                icon={
+                  <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-square-poll-vertical"></i>
+                }
+                component={<Link to="/dashboard/Results" />}
+                className="mt-2 text-black"
+                onClick={() => handleActiveItem("Results")}
+                active={activeSideBar === "Results"}
+              >
+                Results
+              </MenuItem>
+            </div>
           </Menu>
         </Sidebar>
         {/*toggle btn */}

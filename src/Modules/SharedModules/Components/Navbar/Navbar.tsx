@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import NavLogo from "../../../../assets/images/navLogo.png";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -21,6 +23,11 @@ export default function Navbar() {
                   alt="Your Company"
                 />
               </div>
+            </div>
+            <div className="hidden sm:flex title ms-auto flex-1 capitalize font-bold">
+              {location.pathname.slice(1) == "dashboard"
+                ? "Dashboard"
+                : location.pathname.slice(11)}
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center gap-0 md:gap-4 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <div className="buttons felx items-center justify-center">
