@@ -7,22 +7,18 @@ import {
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
 import {
-  GroupFormData,
-  GroupInterface,
+  StudentFormData,
   StudentsInterface,
 } from "../../../../../InterFaces/InterFaces";
 import { getBaseUrl } from "../../../../../Utils/Utils";
 import NoData from "../../../../SharedModules/Components/NoData/NoData";
-import style from "../Groups.module.css";
+import style from "../Students.module.css";
 
-const GroupsList = () => {
+const StudentsList = () => {
   const token =
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjdkNTVlNmM4NWYxZWNkYmMyNmY1YzIiLCJlbWFpbCI6Im9tYXJiYXplZWRAZ21haWwuY29tIiwicm9sZSI6Ikluc3RydWN0b3IiLCJpYXQiOjE3MTk2NzE4NzUsImV4cCI6MTcyMzI3MTg3NX0.HQjkFkOkJDB1pr01-_4YgK5DcKs--7k8jSvXP4IP8rE";
-  const animatedComponents = makeAnimated();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -36,11 +32,13 @@ const GroupsList = () => {
       email: "",
       status: false,
       role: "",
+      // students: [],
     },
   ]);
-  const [groups, setGroups] = useState([]);
+  const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState<{
+  const [studentId, setStudentId] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState<{
     name: string;
     _id: string;
   }>({
@@ -48,40 +46,15 @@ const GroupsList = () => {
     _id: "",
   });
 
-  // get all students array
+  // get all groups to display
   const getAllStudents = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `https://upskilling-egypt.com:3005/api/student`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      setAllStudents(
-        res.data.map((student: StudentsInterface) => ({
-          value: student._id,
-          label: student.first_name,
-        }))
-      );
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message || "fail signin");
-      }
-    }
-  }, [token]);
-
-  // get all groups to display
-  const getAllGroups = useCallback(async () => {
-    try {
-      const res = await axios.get(`${getBaseUrl()}/api/group`, {
+      const res = await axios.get(`${getBaseUrl()}/api/student`, {
         headers: {
           Authorization: token,
         },
       });
-      setGroups(res.data);
+      setStudents(res.data);
       console.log(res.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -90,10 +63,10 @@ const GroupsList = () => {
     }
   }, [token]);
 
-  // vaiable submmition for add , delete and edit
-  const onSubmit = async (formData: GroupFormData) => {
+  // variable submmition for add , delete and edit
+  const onSubmit = async (formData: StudentFormData) => {
     if (openDeleteModal) {
-      await handleDelete();
+      await handleDelete(studentId);
     } else if (openEditModal) {
       await handleEdit(formData);
     } else if (openAddModal) {
@@ -106,22 +79,22 @@ const GroupsList = () => {
     setOpenEditModal(false);
     setOpenDeleteModal(false);
     reset();
-    setSelectedGroup({ _id: "", name: "" });
+    // setSelectedGroup({ _id: "", name: "" });
   };
 
-  // delete the selected group
-  const handleDelete = async () => {
+  // delete the selected student
+  const handleDelete = async (studentId: string) => {
     try {
       const res = await axios.delete(
-        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
+        `https://upskilling-egypt.com:3005/api/student/${studentId}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      getAllGroups();
       handleClose();
+      getAllStudents();
       toast.success(res.data.message);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -129,16 +102,14 @@ const GroupsList = () => {
       }
     }
   };
-  // add a new group
-  const handleAdd = async (formData: GroupFormData) => {
+  // add a new student
+  const handleAdd = async (formData: StudentFormData) => {
     try {
       const res = await axios.post(
-        `https://upskilling-egypt.com:3005/api/group`,
+        `https://upskilling-egypt.com:3005/api/student`,
         {
-          name: formData.groupName,
-          students: selectedStudents.map(
-            (student: { value: string }) => student.value
-          ),
+          name: formData.first_name,
+          phone: formData.phone,
         },
         {
           headers: {
@@ -146,9 +117,9 @@ const GroupsList = () => {
           },
         }
       );
-      getAllGroups();
+      // getAllStudents();
       handleClose();
-      setSelectedGroup({ _id: "", name: "" });
+      // setSelectedGroup({ _id: "", name: "" });
       toast.success(res.data.message);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -157,17 +128,14 @@ const GroupsList = () => {
     }
   };
 
-  // edit the selected group
-  const handleEdit = async (formData: GroupFormData) => {
-    console.log(selectedGroup);
+  // edit the selected student
+  const handleEdit = async (formData: StudentFormData) => {
     try {
       const res = await axios.put(
-        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
+        `https://upskilling-egypt.com:3005/api/student/${selectedStudent.id}`,
         {
-          name: formData.groupName,
-          students: selectedStudents.map(
-            (student: { value: string }) => student.value
-          ),
+          name: formData.first_name,
+          phone: formData.phone,
         },
         {
           headers: {
@@ -175,9 +143,9 @@ const GroupsList = () => {
           },
         }
       );
-      getAllGroups();
+      getAllStudents();
       handleClose();
-      setSelectedGroup({ _id: "", name: "" });
+      // setSelectedGroup({ _id: "", name: "" });
       toast.success(res.data.message);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -187,19 +155,9 @@ const GroupsList = () => {
   };
 
   useEffect(() => {
+    // getAllStudents();
     getAllStudents();
-    getAllGroups();
-  }, [getAllStudents, getAllGroups]);
-
-  // re-ender the app when the selected group changes to avoid the delay of changing the name of group
-  useEffect(() => {
-    reset();
-    setSelectedStudents(
-      allStudents.filter((student) =>
-        selectedGroup.students?.includes(student.value)
-      )
-    );
-  }, [selectedGroup, reset, allStudents]);
+  }, [getAllStudents]);
 
   return (
     <div className="flex justify-center m-auto">
@@ -213,41 +171,23 @@ const GroupsList = () => {
                 setOpenAddModal(true);
               }}
             >
-              <i className="fa-solid fa-plus"></i> Add To Group
+              <i className="fa-solid fa-plus"></i> Add Student
             </button>
           </div>
           <section className="my-4">
-            <h1 className="mb-3 text-xl text-bold">Groups List</h1>
+            <h1 className="mb-3 text-xl text-bold">Students List</h1>
             <ul className={`${style.responsiveTableProjects}`}>
-              {groups.length > 0 ? (
-                groups.map((group: GroupInterface) => (
+              {students.length > 0 ? (
+                students.map((student: StudentsInterface) => (
                   <li
-                    key={group._id}
+                    key={student._id}
                     className={`${style.tableRow} flex flex-col sm:flex-row items-center justify-between`}
                   >
                     <div
                       className={`${style.col} flex flex-col gap-2`}
                       data-label="Name :"
                     >
-                      <span> {group?.name} </span>
-                      <span className="text-gray-500 text-[15px] flex items-center justify-start gap-2">
-                        <span>no of students :</span>
-                        {group?.students.map((studentId: string, index) => {
-                          const student: { label: string } = allStudents.find(
-                            (s) => s.value === studentId
-                          );
-
-                          return (
-                            <span
-                              key={index}
-                              className={`${style.studentCircle}`}
-                              title={student?.label}
-                            >
-                              {student?.label.charAt(0)}
-                            </span>
-                          );
-                        })}
-                      </span>
+                      <span> {student?.first_name} {student?.last_name} </span>
                     </div>
                     <div
                       className={`${style.col} p-0 flex items-between justify-start sm:justify-end`}
@@ -260,7 +200,7 @@ const GroupsList = () => {
                           className="mb-0"
                           onClick={() => {
                             setOpenDeleteModal(true);
-                            setSelectedGroup(group);
+                            setSelectedStudent(student);
                           }}
                         >
                           <div className="flex items-center justify-center">
@@ -276,10 +216,9 @@ const GroupsList = () => {
                             setOpenEditModal(true);
                             const filteredStudents = allStudents.filter(
                               (student) =>
-                                group.students.includes(student.value)
+                                student.includes(student.value)
                             );
                             setSelectedStudents(filteredStudents);
-                            setSelectedGroup(group);
                           }}
                         >
                           <div className="flex items-center justify-center">
@@ -315,15 +254,15 @@ const GroupsList = () => {
           <div className="p-4 sm:p-6">
             <DialogTitle className="text-xl font-semibold text-gray-800">
               {openDeleteModal
-                ? "Delete Group"
+                ? "Delete Student"
                 : openEditModal
-                ? "Edit Group"
-                : "Add Group"}
+                  ? "Edit Student"
+                  : "Add Student"}
             </DialogTitle>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
               {openDeleteModal ? (
                 <p className="text-sm text-gray-700">
-                  Are you sure you want to delete this group?
+                  Are you sure you want to delete this student?
                 </p>
               ) : (
                 <>
@@ -331,34 +270,28 @@ const GroupsList = () => {
                     <input
                       type="text"
                       {...register("groupName")}
-                      defaultValue={selectedGroup.name || ""}
+                      // defaultValue={selectedStudent.first_name || ""}
                       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Enter Group Name"
+                      placeholder="Enter Student Name"
                     />
                   </div>
-                  <div className="mb-4">
-                    <Select
-                      closeMenuOnSelect={false}
-                      components={animatedComponents}
-                      isMulti
-                      options={allStudents}
-                      value={selectedStudents}
-                      onChange={(e) => setSelectedStudents(e)}
-                      menuPortalTarget={document.body}
-                      styles={{
-                        menuPortal: (base) => ({
-                          ...base,
-                          zIndex: 9999,
-                        }),
-                      }}
-                    />
-                  </div>
+                    <div className="mb-4">
+                      <input
+                        type="tel"
+                        {...register("groupName")}
+                        // defaultValue={selectedStudent.first_name || ""}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Phone"
+                      />
+                    </div>
+                  
                 </>
               )}
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-4">
                 <button
                   type="submit"
                   className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  onClick={() => handleDelete(studentId)}
                 >
                   {openDeleteModal ? "Delete" : openEditModal ? "Edit" : "Add"}
                 </button>
@@ -378,4 +311,4 @@ const GroupsList = () => {
   );
 };
 
-export default GroupsList;
+export default StudentsList;

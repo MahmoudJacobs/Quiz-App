@@ -16,10 +16,15 @@ export interface StudentsInterface {
   email: string;
   status: boolean;
   role: string;
+  // students: [];
 }
 export interface GroupFormData {
   groupName: string;
   student: { value: string };
+}
+export interface StudentFormData {
+  first_name: string;
+  phone: number;
 }
 export interface GroupInterface {
   _id: string;

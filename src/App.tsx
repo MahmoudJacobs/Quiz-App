@@ -15,7 +15,7 @@ import TestDashboard from "./Modules/TestModule/Components/TestDashboard/TestDas
 import TDashboardLayout from "./Modules/SharedModules/Components/Layouts/TDashboardLayout/TDashboardLayout";
 import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes";
 import TestResults from "./Modules/TestModule/Components/TestResults";
-import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
+import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList/StudentsList";
 import SignInUp from "./Modules/AuthModule/Components/SignIn-up/SignInUp";
 
 export default function App() {
