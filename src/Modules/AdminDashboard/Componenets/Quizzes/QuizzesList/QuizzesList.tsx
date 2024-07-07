@@ -219,26 +219,26 @@ export default function QuizzesList() {
     } 
   }
 
-  const getGroupDetails = useCallback(async (groupId) => {
-    try {
-      const response = await axios.get(
-        `${getBaseUrl()}/api/group/${groupId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setGroupDetails((prevState) => ({
-        ...prevState,
-        [groupId]: response.data.name,
-      }));
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      }
-    }
-  }, [token]);
+  // const getGroupDetails = useCallback(async (groupId) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${getBaseUrl()}/api/group/${groupId}`,
+  //       {
+  //         headers: {
+  //           Authorization: token,
+  //         },
+  //       }
+  //     );
+  //     setGroupDetails((prevState) => ({
+  //       ...prevState,
+  //       [groupId]: response.data.name,
+  //     }));
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       toast.error(error.response.data.message);
+  //     }
+  //   }
+  // }, [token]);
 
   {/* Api Requests END */}
   
@@ -321,7 +321,7 @@ export default function QuizzesList() {
                 {completedQuizList.map((quiz) => (
                   <tr key={quiz._id}>
                     <td className="border border-slate-300 rounded p-5">{quiz.title}</td>
-                    <td className="border border-slate-300 rounded">{groupDetails[quiz.group]}</td>
+                    <td className="border border-slate-300 rounded">FirstGroup-MM</td>
                     <td className="border border-slate-300 rounded">{quiz.participants}</td>
                     <td className="border border-slate-300 rounded p-3">
                       {new Date(quiz.schadule).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
