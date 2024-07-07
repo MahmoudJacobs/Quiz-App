@@ -176,6 +176,11 @@ const StudentsList = () => {
           </div>
           <section className="my-4">
             <h1 className="mb-3 text-xl text-bold">Students List</h1>
+            <ul className={`${style.groups}`}>
+            <li>Group 1</li>  
+            <li>Group 2</li>  
+            <li>Group 3</li>  
+            </ul>
             <ul className={`${style.responsiveTableProjects}`}>
               {students.length > 0 ? (
                 students.map((student: StudentsInterface) => (

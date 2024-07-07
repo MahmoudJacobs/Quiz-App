@@ -156,3 +156,22 @@
   visibility: visible;
   opacity: 1;
 }
+
+.groups {
+  width: fit-content;
+  display: flex;
+  gap: 20px;
+  margin: 10px;
+}
+
+.groups li {
+  padding: 5px 20px;
+  border: 1px solid #000;
+  border-radius: 50px;
+}
+
+.groups li:hover {
+  color: #fff;
+  background-color: #000;
+  cursor: pointer;
+}
