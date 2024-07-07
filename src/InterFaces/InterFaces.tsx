@@ -26,3 +26,14 @@ export interface GroupInterface {
   name: string;
   students: [];
 }
+export interface QuizzCreateInterface {
+  title: string;
+  description: string;
+  group: { value: string };
+  questions_number: number;
+  difficulty: string;
+  type: string;
+  schadule: string;
+  duration: string;
+  score_per_question: string;
+}
