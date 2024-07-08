@@ -27,8 +27,8 @@ export default function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setTop5quizzes(res.data);
-      console.log(res.data);
+      const slice5Quizzes = res.data.slice(0, 5);
+      setTop5quizzes(slice5Quizzes);
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +42,6 @@ export default function Dashboard() {
       });
       const slice5students = res.data.slice(0, 5);
       setTop5students(slice5students);
-      console.log(slice5students);
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +96,7 @@ export default function Dashboard() {
                       <div className="flex items-start justify-between">
                         <p> No. of student’s enrolled: {quiz.participants}</p>
                         <p className="flex items-center justify-center">
-                          <span>open</span>
+                          <span className="hidden sm:block">open</span>
                           <i className="fa fa-arrow-alt-circle-right mx-1"></i>
                         </p>
                       </div>

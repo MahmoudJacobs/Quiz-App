@@ -42,3 +42,21 @@ export interface SingleStudentInterface {
   status: string;
   email: string;
 }
+export interface QuizzCreateInterface {
+  title: string;
+  description: string;
+  group: { value: string };
+  questions_number: number;
+  difficulty: string;
+  type: string;
+  schadule: string;
+  duration: string;
+  score_per_question: string;
+}
+export interface QuestionsInterface {
+  _id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  type: string;
+}

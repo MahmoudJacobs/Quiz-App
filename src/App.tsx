@@ -20,6 +20,7 @@ import TestResults from "./Modules/TestModule/Components/TestResults";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setToken } from "./Redux/UserSlice";
+import QuestionsList from "./Modules/AdminDashboard/Componenets/Quizzes/QuestionsList/QuestionsList";
 export default function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -85,6 +86,10 @@ export default function App() {
         {
           path: "results",
           element: <ResultsList />,
+        },
+        {
+          path: "questions",
+          element: <QuestionsList />,
         },
       ],
     },
