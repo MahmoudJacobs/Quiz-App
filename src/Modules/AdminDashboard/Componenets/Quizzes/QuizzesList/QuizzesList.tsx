@@ -20,6 +20,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 export default function QuizzesList() {
+  const navigate = useNavigate();
   const animatedComponents = makeAnimated();
   const [completedQuizList, setCompletedQuizList] = useState([]);
   const [upcomingQuizList, setUpcomingQuizList] = useState([]);
@@ -42,6 +43,10 @@ export default function QuizzesList() {
   });
 
 
+
+    const handleOpenQuiz = (quizId: string) => {
+      navigate(`/dashboard/quizzes/${quizId}`);
+    };
   
     const handleCopy = () => {
       navigator.clipboard.writeText(succesCode)
@@ -286,7 +291,7 @@ export default function QuizzesList() {
                       <p>{new Date(quiz.schadule).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}</p>
                       <div className="flex flex-row justify-between mt-4 font-bold">
                         <p>No. of student's enrolled: {quiz.participants}</p>
-                        <button><p className="hover:underline ml-10">Open</p></button>
+                        <button onClick={() => handleOpenQuiz(`${quiz._id}`)}><p className="hover:underline ml-10">Open</p></button>
                       </div>
                     </div>
                   </div>

@@ -17,6 +17,7 @@ import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes
 import TestResults from "./Modules/TestModule/Components/TestResults";
 import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
 import SignInUp from "./Modules/AuthModule/Components/SignIn-up/SignInUp";
+import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
 
 export default function App() {
   const routes = createBrowserRouter([
@@ -72,6 +73,10 @@ export default function App() {
         {
           path: "quizzes",
           element: <QuizzesList />,
+        },
+        {
+          path: "quizzes/:id",
+          element: <QuizzDetails />
         },
         {
           path: "results",
