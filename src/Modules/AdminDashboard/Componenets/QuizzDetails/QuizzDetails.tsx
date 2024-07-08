@@ -71,7 +71,7 @@ export default function QuizzDetails() {
             <p className="p-2 font-semibold ml-2">{quizDetails.duration}</p>
           </div>
           <div className="flex flex-row mb-5  border border-gray-300 w-8/12 h-10 rounded-lg">
-            <p className="flex flex-grow p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">Number of questions</p>
+            <p className="flex flex-grow p-2 bg-orange-100 font-bold w-vw h-full rounded-lg">Number of questions</p>
             <p className="p-2 font-semibold ml-2">{quizDetails.questions_number}</p>
           </div>
           <div className="flex flex-row mb-5  border border-gray-300 w-8/12 h-10 rounded-lg">
