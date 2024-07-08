@@ -66,19 +66,19 @@ export default function QuizzDetails() {
         <div className="p-5 border border border-gray-300 rounded-lg h-full">
           <h1 className="font-bold text-2xl text-center container sm:text-left">{quizDetails.title}</h1>
           <p className="font-semibold mt-3 mb-5 text-center sm:text-left">{new Date(quizDetails.schadule).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}</p>
-          <div className="flex flex-row mb-5 border border-gray-300 w-8/12 h-10 rounded-lg">
+          <div className="flex flex-row mb-5 border border-gray-300 container h-10 rounded-lg lg:w-8/12">
             <p className="p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">Duration</p>
             <p className="p-2 font-semibold ml-2">{quizDetails.duration}</p>
           </div>
-          <div className="flex flex-row mb-5  border border-gray-300 w-8/12 h-10 rounded-lg">
-            <p className="flex flex-grow p-2 bg-orange-100 font-bold w-vw h-full rounded-lg">Number of questions</p>
+          <div className="flex flex-row mb-5 border border-gray-300 container h-10 rounded-lg lg:w-8/12">
+            <p className="flex p-2 bg-orange-100 font-bold w-full h-full rounded-lg">Number of questions</p>
             <p className="p-2 font-semibold ml-2">{quizDetails.questions_number}</p>
           </div>
-          <div className="flex flex-row mb-5  border border-gray-300 w-8/12 h-10 rounded-lg">
+          <div className="flex flex-row mb-5  border border-gray-300 container h-10 rounded-lg lg:w-8/12">
             <p className="flex flex-grow p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">Score per question</p>
             <p className="p-2 font-semibold ml-2">{quizDetails.score_per_question}</p>
           </div>
-          <div className="flex flex-col mb-5  border border-gray-300 w-8/12 h-full rounded-lg">
+          <div className="flex flex-col mb-5  border border-gray-300 container h-full rounded-lg lg:w-8/12">
             <p className="p-2 bg-orange-100 font-bold w-full h-full rounded-lg">Description</p>
             <p className="p-2 font-semibold ml-2">{quizDetails.description}</p>
           </div>
