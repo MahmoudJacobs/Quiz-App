@@ -21,9 +21,10 @@ import {
   QuizzCreateInterface,
 } from "../../../../../InterFaces/InterFaces";
 import { getBaseUrl } from "../../../../../Utils/Utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function QuizzesList() {
+  const navigate = useNavigate();
   const animatedComponents = makeAnimated();
   const [completedQuizList, setCompletedQuizList] = useState([]);
   const [upcomingQuizList, setUpcomingQuizList] = useState([]);
@@ -44,6 +45,10 @@ export default function QuizzesList() {
     name: "",
     _id: "",
   });
+
+  const handleOpenQuiz = (quizId: string) => {
+    navigate(`/dashboard/quizzes/${quizId}`);
+  };
 
   const handleCopy = () => {
     navigator.clipboard
@@ -306,7 +311,7 @@ export default function QuizzesList() {
                       </p>
                       <div className="flex flex-row justify-between mt-4 font-bold">
                         <p>No. of student's enrolled: {quiz.participants}</p>
-                        <button>
+                        <button onClick={() => handleOpenQuiz(`${quiz._id}`)}>
                           <p className="hover:underline ml-10">Open</p>
                         </button>
                       </div>

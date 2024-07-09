@@ -1,6 +1,10 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./Modules/AdminDashboard/Componenets/Dashboard/Dashboard";
 import GroupsList from "./Modules/AdminDashboard/Componenets/Groups/GroupsList/GroupsList";
+import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
+import QuestionsList from "./Modules/AdminDashboard/Componenets/Quizzes/QuestionsList/QuestionsList";
 import QuizzesList from "./Modules/AdminDashboard/Componenets/Quizzes/QuizzesList/QuizzesList";
 import ResultsList from "./Modules/AdminDashboard/Componenets/Results/ResultsList/ResultsList";
 import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
@@ -17,10 +21,8 @@ import NoData from "./Modules/SharedModules/Components/NoData/NoData";
 import TestDashboard from "./Modules/TestModule/Components/TestDashboard/TestDashboard";
 import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes";
 import TestResults from "./Modules/TestModule/Components/TestResults";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { setToken } from "./Redux/UserSlice";
-import QuestionsList from "./Modules/AdminDashboard/Componenets/Quizzes/QuestionsList/QuestionsList";
+
 export default function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -82,6 +84,10 @@ export default function App() {
         {
           path: "quizzes",
           element: <QuizzesList />,
+        },
+        {
+          path: "quizzes/:id",
+          element: <QuizzDetails />,
         },
         {
           path: "results",
