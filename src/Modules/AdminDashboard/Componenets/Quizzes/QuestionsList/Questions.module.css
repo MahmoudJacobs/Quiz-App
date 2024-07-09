@@ -2,14 +2,13 @@
   padding: 0;
   li {
     border-radius: 10px;
-    padding: 20px 30px;
+    padding: 7px 15px;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 2px;
   }
   .tableHeader {
     padding: 25px 35px;
-    /* background-color: #315951e5; */
-    background-color: var(--tableHdBg);
     font-family: Poppins;
     font-size: 16px;
     font-weight: 500;
@@ -70,7 +69,7 @@
     .col {
       width: 50%;
       display: flex;
-      padding: 10px 0;
+      padding: 5px 0;
       &:before {
         color: #9facb9;
         content: attr(data-label);
@@ -105,4 +104,20 @@
   position: absolute;
   top: 22px;
   left: 25px;
+}
+/********************/
+.wrapper {
+  position: relative;
+  background-color: #0e382f;
+}
+.formBody .input-wrapper::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3px;
+  content: attr(data-attr);
+  background-color: tomato;
+  color: black;
+  height: 100%;
+  width: 100px;
 }
