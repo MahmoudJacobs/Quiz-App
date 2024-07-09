@@ -3,12 +3,84 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import { QuizzCreateInterface } from '../../../../InterFaces/InterFaces';
 import { Link, useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+
 
 
 export default function QuizzDetails() {
-  const navigate = useNavigate();
+  const animatedComponents = makeAnimated();
   const { id } = useParams<{ id: string }>();
   const [quizDetails, setQuizDetails] = useState({});
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState([]);
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [selectedScore, setSelectedScore] = useState([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState([]);
+
+
+  const handleClose = () => {
+    setOpenEditModal(false);
+  }
+
+  const onSubmit = async (data) => {
+    const formData = {
+      ...data,
+      title: data.title,
+      description: data.description,
+      questions_number: selectedQuestions.value,
+      difficulty: selectedDifficulty.value,
+      schadule: data.schadule, 
+      duration: selectedDuration.value,
+      score_per_question: selectedScore.value,
+    };
+
+    if (openEditModal) {
+      await updateQuizz(formData);
+    }
+  };
+
+  const durations = [
+    {value: '10', label: '10'},
+    {value: '20', label: '20'},
+    {value: '30', label: '30'},
+    {value: '40', label: '40'},
+    {value: '50', label: '50'},
+    {value: '60', label: '60'},
+  ]
+  // const questions = [
+  //   {value: 1, label: 1},
+  //   {value: 5, label: 5},
+  //   {value: 10, label: 10},
+  //   {value: 15, label: 15},
+  //   {value: 20, label: 20},
+  //   {value: 25, label: 25},
+  // ]
+  const score = [
+    {value: '1', label: '1'},
+    {value: '2', label: '2'},
+    {value: '3', label: '3'},
+    {value: '4', label: '4'},
+    {value: '5', label: '5'}
+  ]
+  // const difficulty = [
+  //   {value: 'easy', label: 'easy'},
+  //   {value: 'medium', label: 'medium'},
+  //   {value: 'hard', label: 'hard'},
+  // ]
+  // const type = [
+  //   {value: 'FE', label: 'FE'},
+  //   {value: 'BE', label: 'BE'},
+  //   {value: 'DO', label: 'DO'},
+  // ]
 
 
   const token =
@@ -33,7 +105,35 @@ export default function QuizzDetails() {
     }
   }
 
+  const updateQuizz = async (formData: QuizzCreateInterface) => {
+    try {
+      const response = await axios.put(
+        `https://upskilling-egypt.com:3005/api/quiz/${id}`,
+        {
+          title: formData.title,
+          description: formData.description,
+          // questions_number: formData.questions_number,
+          // difficulty: formData.difficulty,
+          schadule: formData.schadule,
+          score_per_question: formData.score_per_question,
+          duration: formData.duration
+        },
+        {
+          headers: {
+            authorization: token
+          }
+        }
+      )
+      handleClose();
+      toast.success(response.data.message);
+      getQuizzDetails();
+    } catch (error) {
+      toast.error(error.response.data.message[0])
+    }
+  }
 
+
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
     getQuizzDetails();
@@ -87,13 +187,167 @@ export default function QuizzDetails() {
             <p className="p-2 font-semibold ml-2">{quizDetails}</p>
           </div> */}
           <div className="flex justify-end font-bold">
-            <button className="flex p-2 border rounded-full bg-black items-center justify-around w-24 text-white">
+            <button onClick={() => {setOpenEditModal(true)}} className="flex p-2 border rounded-full bg-black items-center justify-around w-24 text-white">
               <i className="fa-solid fa-pencil"></i>
               <p>Edit</p>
             </button>
           </div>
         </div>
       </div>
+
+
+      <Dialog
+        className="fixed inset-0 z-50 overflow-y-auto"
+        open={openEditModal}
+        onClose={() => {
+          setOpenEditModal(false);
+        }}
+      >
+        <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-30" />
+
+        <DialogPanel className="relative w-full max-w-md sm:max-w-lg m-auto mt-20 rounded-lg overflow-hidden bg-white shadow-lg">
+        <div className="p-4 sm:p-6">
+          <DialogTitle className="text-xl font-semibold text-gray-800">
+            Edit Quizz
+          </DialogTitle>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+              <div className="mb-4">
+                <input
+                  type="text"
+                  {...register("title")}
+                  defaultValue={quizDetails.title}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Enter Quiz Title"
+                />
+              </div>
+
+
+              <label className="font-bold">Description</label>
+                  <div className="mb-4">
+                    <input
+                      type="text"
+                      {...register("description")}
+                      defaultValue={quizDetails.description}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Describe the Quiz"
+                    />
+                    </div>
+
+
+              {/* <div className="flex justify-between font-bold">
+                <label className="ml-7">No. of questions</label>
+                <label className="mr-20">Difficulty</label>
+              </div> */}
+
+              {/* <div className="mb-4 flex w-full justify-between">
+                    
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={questions}
+                      value={selectedQuestions}
+                      onChange={(e) => setSelectedQuestions(e)}
+                      menuPortalTarget={document.body}
+                      className="container mr-4"
+                      styles={{
+                        menuPortal: (base) => ({
+                          ...base,
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={difficulty}
+                      value={selectedDifficulty}
+                      onChange={(e) => setSelectedDifficulty(e)}
+                      menuPortalTarget={document.body}
+                      className="container mr-4"
+                      styles={{
+                        menuPortal: (base) => ({
+                          ...base,
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  </div> */}
+
+
+                  <label className="font-bold">Schedule</label>
+                  <div className="mb-4">
+                    <input
+                      type="datetime-local"
+                      {...register("schadule")}
+                      defaultValue={""}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  </div>
+
+
+              <div className="flex font-bold">
+                <label>Score per question</label>
+                <label className="ml-24">Duration</label>
+              </div>
+
+
+
+              <div className="mb-4 flex w-full justify-between">
+                    
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={score}
+                      value={selectedScore}
+                      onChange={(e) => setSelectedScore(e)}
+                      menuPortalTarget={document.body}
+                      className="container mr-4"
+                      styles={{
+                        menuPortal: (base) => ({
+                          ...base,
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                    <Select
+                      closeMenuOnSelect={true}
+                      components={animatedComponents}
+                      options={durations}
+                      value={selectedDuration}
+                      onChange={(e) => setSelectedDuration(e)}
+                      menuPortalTarget={document.body}
+                      className="container mr-4"
+                      styles={{
+                        menuPortal: (base) => ({
+                          ...base,
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  </div>
+
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="mr-2 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleClose()}
+                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+            </form>
+
+        </div>
+        </DialogPanel>
+      </Dialog>
+
     </>
     )
 }
