@@ -3,7 +3,7 @@ import { getBaseUrl } from "../../../../../Utils/Utils";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NoData from "../../../../SharedModules/Components/NoData/NoData";
-import style from "./Questions.module.css";
+import style from "../Questions.module.css";
 import { QuestionsInterface } from "../../../../../InterFaces/InterFaces";
 import ResponsivePaginationComponent from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function QuestionsList() {
   const { token } = useSelector(
@@ -27,7 +28,16 @@ export default function QuestionsList() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const [openViewModal, setOpenViewModal] = useState<boolean>(false);
-  // const [questType, setQuestType] = useState<string>('');
+  const [selectedQuestion, setSelectedQuestion] = useState<QuestionsInterface>({
+    _id: "",
+    title: "",
+    description: "",
+    difficulty: "",
+    type: "",
+    options: { A: "", B: "", C: "", D: "" },
+    instructor: "",
+    answer: "",
+  });
   const { register, handleSubmit, reset } = useForm();
 
   const getAllQuestions = useCallback(async () => {
@@ -38,7 +48,9 @@ export default function QuestionsList() {
       setQuestions(res.data);
       setTotalPages(Math.ceil(res.data.length / pageSize));
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "Failed to book");
+      }
     }
   }, [token]);
 
@@ -50,7 +62,6 @@ export default function QuestionsList() {
       D: data.d,
     };
     if (openAddModal) {
-      console.log(data);
       try {
         const res = await axios.post(
           `${getBaseUrl()}/api/question`,
@@ -65,19 +76,70 @@ export default function QuestionsList() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(res);
+        toast.success(res.data.message);
+        reset();
+        handleClose();
+        getAllQuestions();
       } catch (error) {
-        console.log(error);
+        if (axios.isAxiosError(error) && error.response) {
+          toast.error(error.response.data.message || "Failed to book");
+        }
+      }
+    }
+    if (openEditModal) {
+      try {
+        const res = await axios.put(
+          `${getBaseUrl()}/api/question/${selectedQuestion._id}`,
+          {
+            title: data.title,
+            description: data.description,
+            options: options,
+            answer: data.answer,
+            type: data.type,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        toast.success(res.data.message);
+        reset();
+        handleClose();
+        getAllQuestions();
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          toast.error(error.response.data.message || "Failed to book");
+        }
       }
     }
   };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `${getBaseUrl()}/api/question/${selectedQuestion._id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success(res.data.message);
+      reset();
+      handleClose();
+      getAllQuestions();
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "Failed to book");
+      }
+    }
+  };
+
   const handleClose = () => {
     setOpenAddModal(false);
+    setOpenViewModal(false);
     setOpenEditModal(false);
     setOpenDeleteModal(false);
-    setOpenViewModal(false);
     reset();
   };
+
   useEffect(() => {
     getAllQuestions();
   }, [getAllQuestions]);
@@ -99,7 +161,7 @@ export default function QuestionsList() {
           + add question
         </button>
       </div>
-      {/*Table Data */}
+      {/* Table Data */}
       <div className={`project-body mt-2 container rounded-4 shadow px-4 py-5`}>
         <ul className={`${style.responsiveTableProjects} bg-black`}>
           {/* Table header */}
@@ -151,7 +213,10 @@ export default function QuestionsList() {
                     <li
                       role="button"
                       className="px-3 py-1 pt-2 "
-                      onClick={() => setOpenViewModal(true)}
+                      onClick={() => {
+                        setOpenViewModal(true);
+                        setSelectedQuestion(quest);
+                      }}
                     >
                       <div className="dropdown-div flex flex-col items-center gap-1 ">
                         <i className="fa-solid fa-eye"></i>
@@ -161,7 +226,10 @@ export default function QuestionsList() {
                     <li
                       role="button"
                       className="px-3 py-1"
-                      onClick={() => setOpenEditModal(true)}
+                      onClick={() => {
+                        setOpenEditModal(true);
+                        setSelectedQuestion(quest);
+                      }}
                     >
                       <div
                         role="button"
@@ -174,7 +242,11 @@ export default function QuestionsList() {
                     <li
                       role="button"
                       className="px-3 py-1"
-                      onClick={() => setOpenDeleteModal(true)}
+                      onClick={() => {
+                        setOpenDeleteModal(true);
+                        setSelectedQuestion(quest);
+                        handleDelete();
+                      }}
                     >
                       <div
                         role="button"
@@ -202,7 +274,7 @@ export default function QuestionsList() {
           onPageChange={(page) => setCurrentPage(page)}
         />
       </div>
-      {/*overlay and modal */}
+      {/* Overlay and Modal */}
       <Dialog
         className="fixed inset-0 z-50 overflow-y-auto"
         open={openAddModal || openDeleteModal || openEditModal || openViewModal}
@@ -220,113 +292,242 @@ export default function QuestionsList() {
                 : openViewModal
                 ? "View question"
                 : "Add question"}
+              <hr className="my-3" />
             </DialogTitle>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-              {openDeleteModal ? (
-                <p className="text-sm text-gray-700">
-                  Are you sure you want to delete this Question?
-                </p>
-              ) : (
-                <>
-                  <div className="mb-4 flex flex-col gap-2 items-center formBody">
-                    <input
-                      type="text"
-                      {...register("title")}
-                      defaultValue={""}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      data-attr="title"
-                    />
-
-                    <input
-                      type="text"
-                      {...register("description")}
-                      defaultValue={""}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-16"
-                      data-attr="description"
-                    />
-
-                    <div className="answers w-full flex items-center justify-center gap-4">
-                      <div className="flex items-center flex-col w-1/2 gap-2">
+            {openDeleteModal || openAddModal || openEditModal ? (
+              <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
+                {openDeleteModal ? (
+                  <p className="text-sm text-gray-700">
+                    Are you sure you want to delete this Question?
+                  </p>
+                ) : (
+                  <>
+                    <div className="mb-4 flex flex-col gap-5 items-center formBody">
+                      <div className="relative w-full">
+                        <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
+                          Title
+                        </span>
                         <input
                           type="text"
-                          {...register("a")}
-                          defaultValue={""}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          data-attr="a"
-                        />
-
-                        <input
-                          type="text"
-                          {...register("b")}
-                          defaultValue={""}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          data-attr="b"
+                          {...register("title")}
+                          defaultValue={
+                            openEditModal ? selectedQuestion.title : ""
+                          }
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-16 sm:pl-20 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm "
+                          data-attr="title"
                         />
                       </div>
-                      <div className="flex items-center flex-col w-1/2 gap-2">
+                      <div className="relative w-full h-[100px]">
+                        <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
+                          Description
+                        </span>
                         <input
                           type="text"
-                          {...register("c")}
-                          defaultValue={""}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          data-attr="c"
+                          {...register("description")}
+                          defaultValue={
+                            openEditModal ? selectedQuestion.description : ""
+                          }
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none  focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pl-32 sm:pl-36 h-full"
+                          data-attr="description"
                         />
-                        <input
-                          type="text"
-                          {...register("d")}
-                          defaultValue={""}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          data-attr="d"
-                        />
+                      </div>
+                      <div className="answers w-full flex items-center justify-center gap-4">
+                        <div className="flex items-center flex-col w-full gap-2">
+                          <div className="relative w-full">
+                            <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
+                              A
+                            </span>
+                            <input
+                              type="text"
+                              {...register("a")}
+                              defaultValue={
+                                openEditModal ? selectedQuestion.options.A : ""
+                              }
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              data-attr="a"
+                            />
+                          </div>
+                          <div className="relative w-full">
+                            <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
+                              B
+                            </span>
+                            <input
+                              type="text"
+                              {...register("b")}
+                              defaultValue={
+                                openEditModal ? selectedQuestion.options.B : ""
+                              }
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              data-attr="b"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex items-center flex-col gap-2 w-full">
+                          <div className="relative w-full">
+                            <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
+                              C
+                            </span>
+                            <input
+                              type="text"
+                              {...register("c")}
+                              defaultValue={
+                                openEditModal ? selectedQuestion.options.C : ""
+                              }
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              data-attr="c"
+                            />
+                          </div>
+                          <div className="relative w-full">
+                            <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF] pr-4 sm:pr-8 rounded-lg">
+                              D
+                            </span>
+                            <input
+                              type="text"
+                              {...register("d")}
+                              defaultValue={
+                                openEditModal ? selectedQuestion.options.D : ""
+                              }
+                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              data-attr="d"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="correct_answer w-full flex items-center justify-center gap-4">
+                        <div className="relative w-full flex-1">
+                          <span className="absolute top-0 left-0 h-full flex items-center px-3  pr-4 sm:pr-8 text-md font-bold bg-[#FFEDDF]  rounded-lg">
+                            Answer
+                          </span>
+                          <input
+                            type="text"
+                            {...register("answer")}
+                            defaultValue={
+                              openEditModal ? selectedQuestion.answer : ""
+                            }
+                            className="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-24 sm:pl-28 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            data-attr="answer"
+                          />
+                        </div>
+                        <div className="relative w-full flex-2">
+                          <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF] pr-1 sm:pr-8 rounded-lg">
+                            Type
+                          </span>
+                          <select
+                            {...register("type")}
+                            className="border border-gray-400 p-2 rounded-md pl-11 sm:pl-20 w-full"
+                            data-attr="type"
+                          >
+                            <option value={"FE"}>FE</option>
+                            <option value={"FE"}>FE</option>
+                            <option value={"BE"}>BE</option>
+                            <option value={"FS"}>FS</option>
+                            <option value={"AE"}>AE</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                    <div className="correct_answer w-full flex items-center justify-center gap-4">
-                      <input
-                        type="text"
-                        {...register("answer")}
-                        defaultValue={""}
-                        className="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm w-1/2"
-                        data-attr="answer"
-                      />
-                      <select
-                        {...register("type")}
-                        className="w-1/2 border border-gray-400 p-2 rounded-md"
-                        data-attr="type"
+                  </>
+                )}
+                <div className="flex justify-end mt-8">
+                  <button
+                    type="submit"
+                    className="mr-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-center"
+                  >
+                    {openDeleteModal
+                      ? "Delete"
+                      : openEditModal
+                      ? "Edit"
+                      : "Add"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 text-center"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <div className="w-full my-4">
+                  <div className={`${style.table_container} w-full`}>
+                    <div className={`${style.table_row} w-full`}>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3 w-1/4`}
                       >
-                        <option value={"FE"} selected>
-                          FE
-                        </option>
-                        <option value={"FE"}>FE</option>
-                        <option value={"BE"}>BE</option>
-                        <option value={"FS"}>FS</option>
-                        <option value={"AE"}>AE</option>
-                      </select>
+                        <p className="font-bold text-lg">Title</p>
+                      </div>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3 w-3/4`}
+                      >
+                        <p>{selectedQuestion.title}</p>
+                      </div>
+                    </div>
+                    <div className={`${style.table_row} w-full`}>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p className="font-bold text-lg">Description</p>
+                      </div>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p>{selectedQuestion.description}</p>
+                      </div>
+                    </div>
+                    <div className={`${style.table_row} w-full`}>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p className="font-bold text-lg">Difficulty</p>
+                      </div>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p>{selectedQuestion.difficulty}</p>
+                      </div>
+                    </div>
+                    <div className={`${style.table_row} w-full`}>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p className="font-bold text-lg">Type</p>
+                      </div>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p>{selectedQuestion.type}</p>
+                      </div>
+                    </div>
+                    <div className={`${style.table_row} w-full`}>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p className="font-bold text-lg">instructor</p>
+                      </div>
+                      <div
+                        className={`${style.table_cell} border border-gray-300 p-3`}
+                      >
+                        <p>{selectedQuestion.instructor}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="mb-4"></div>
-                </>
-              )}
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="mr-2 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  {openDeleteModal ? "Delete" : openEditModal ? "Edit" : "Add"}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+                  <div className="flex justify-end mt-4">
+                    <button
+                      type="button"
+                      onClick={handleClose}
+                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 text-center"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </DialogPanel>
       </Dialog>
     </div>
   );
 }
-
-// here a small calculate to display the number of questions according to the page number and every click we slice the array of questions

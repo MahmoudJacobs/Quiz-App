@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import { QuizzCreateInterface } from "../../../../InterFaces/InterFaces";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { QuizzCreateInterface } from "../../../../InterFaces/InterFaces";
 
 export default function QuizzDetails() {
   const animatedComponents = makeAnimated();

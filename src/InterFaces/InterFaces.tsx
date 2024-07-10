@@ -59,4 +59,7 @@ export interface QuestionsInterface {
   description: string;
   difficulty: string;
   type: string;
+  options: { A: string; B: string; C: string; D: string };
+  instructor: string;
+  answer: string;
 }

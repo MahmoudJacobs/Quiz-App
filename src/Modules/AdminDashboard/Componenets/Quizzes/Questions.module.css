@@ -106,18 +106,25 @@
   left: 25px;
 }
 /********************/
-.wrapper {
-  position: relative;
-  background-color: #0e382f;
+.table_container {
+  display: table;
+  width: 100%;
+  border-collapse: collapse; /* Optional: Collapses borders into a single border */
 }
-.formBody .input-wrapper::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 3px;
-  content: attr(data-attr);
-  background-color: tomato;
-  color: black;
-  height: 100%;
-  width: 100px;
+
+.table_row {
+  display: table-row;
+  width: 100%; /* Ensures the table row takes full width */
+}
+
+.table_cell {
+  display: table-cell;
+  vertical-align: middle;
+  border: 1px solid #ccc; /* Optional: Border style */
+  padding: 10px; /* Optional: Padding */
+}
+
+/* Optional: Adjust padding or other styles as needed */
+.table-cell p {
+  margin: 0; /* Remove default margin */
 }
