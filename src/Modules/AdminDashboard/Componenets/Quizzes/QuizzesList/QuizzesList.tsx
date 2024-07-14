@@ -264,7 +264,7 @@ export default function QuizzesList() {
       <div className="flex flex-row justify-around flex-wrap">
         {/*New Quizz and Questions Bank*/}
         <div className="flex flex-wrap flex-row ms-3 justify-center sm:justify-start">
-          <div className="py-5">
+          <div className="py-4">
             <button
               onClick={() => {
                 setOpenAddModal(true);
