@@ -11,6 +11,7 @@ import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { QuizzCreateInterface } from "../../../../InterFaces/InterFaces";
 
 export default function QuizzDetails() {
@@ -78,8 +79,10 @@ export default function QuizzDetails() {
   //   {value: 'DO', label: 'DO'},
   // ]
 
-  const token =
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Njg3MTg1OGM4NWYxZWNkYmMyOTYwZTQiLCJlbWFpbCI6Im1haG1vdWQ3emVyb0B5YWhvby5jb20iLCJyb2xlIjoiSW5zdHJ1Y3RvciIsImlhdCI6MTcyMDIzMDczNywiZXhwIjoxNzIzODMwNzM3fQ.AlvPte15moOgcL_GrQPlqk5UwtEdyUxjTlMp3DrTroE";
+  const { token } = useSelector(
+    (state: { user: { token: string } }) => state.user
+  );
+  
 
   const getQuizzDetails = async () => {
     try {
@@ -87,14 +90,16 @@ export default function QuizzDetails() {
         `https://upskilling-egypt.com:3005/api/quiz/${id}`,
         {
           headers: {
-            authorization: token,
+            authorization: `Bearer ${token}`,
           },
         }
       );
       console.log(response.data);
       setQuizDetails(response.data);
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message[0]);
+      }
     }
   };
 
@@ -113,7 +118,7 @@ export default function QuizzDetails() {
         },
         {
           headers: {
-            authorization: token,
+            authorization: `Bearer ${token}`,
           },
         }
       );
@@ -121,7 +126,9 @@ export default function QuizzDetails() {
       toast.success(response.data.message);
       getQuizzDetails();
     } catch (error) {
-      toast.error(error.response.data.message[0]);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message[0]);
+      }
     }
   };
 
