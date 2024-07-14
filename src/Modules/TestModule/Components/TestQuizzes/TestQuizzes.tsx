@@ -254,8 +254,7 @@ export default function TestQuizzes() {
           <div className="p-4 sm:p-6">
             <div className="flex flex-col items-center text-center">
               <img className="w-2/12 mb-5" src={success} />
-              <p className="font-bold text-2xl mb-5">Quiz Joined Successfuly</p>
-              
+              <p className="font-bold text-2xl mb-5">Quiz Joined Successfully</p>
             </div>
           </div>
         </DialogPanel>
