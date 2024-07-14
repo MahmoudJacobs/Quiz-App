@@ -350,10 +350,10 @@ export default function QuizzesList() {
                   <th className="border border-slate-300 text-sm sm:text-xl">
                     Title
                   </th>
-                  <th className="border border-slate-300 text-sm sm:text-xl p-2">
+                  <th className="border border-slate-300 text-sm sm:text-xl px-2">
                     Group name
                   </th>
-                  <th className="border border-slate-300 text-sm sm:text-xl p-2">
+                  <th className="border border-slate-300 text-sm sm:text-xl px-2">
                     No. of persons in group
                   </th>
                   <th className="border border-slate-300 text-sm sm:text-xl">

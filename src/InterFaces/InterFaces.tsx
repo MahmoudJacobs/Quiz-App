@@ -63,3 +63,17 @@ export interface QuestionsInterface {
   instructor: string;
   answer: string;
 }
+export interface ResultsInterface {
+  quiz: {
+    _id: string;
+    title: string;
+    group: string;
+    difficulty: string;
+    type: string;
+    instructor: string;
+    status: string;
+    score_per_question: number;
+    createdAt: string;
+  };
+  participants: string[];
+}
