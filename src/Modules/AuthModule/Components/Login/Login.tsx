@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LoginFormTypes } from "../../../../InterFaces/InterFaces";
-import { setToken } from "../../../../Redux/UserSlice";
+import { setToken, setUser } from "../../../../Redux/UserSlice";
 import {
   emailValidation,
   passwordValidation,
@@ -20,6 +20,7 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormTypes>();
   const dispatch = useDispatch();
+
   const onSubmit = async (data: LoginFormTypes) => {
     try {
       const response = await axios.post(
@@ -35,9 +36,15 @@ export default function Login() {
       toast.success(response.data.message);
       localStorage.setItem("accessToken", response.data.data.accessToken);
       dispatch(setToken(response.data.data.accessToken));
-      navigate("/dashboard");
-    } catch (err) {
-      toast.error(err.response.data.message);
+      dispatch(setUser(response.data.data.profile));
+
+      response.data.data.profile.role === "Instructor"
+        ? navigate("/dashboard")
+        : navigate("/test");
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "Failed to book");
+      }
     }
   };
   return (
