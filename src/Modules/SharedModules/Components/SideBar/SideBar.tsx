@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./SideBar.css";
 
@@ -9,6 +10,7 @@ export default function SideBar() {
   const [windowWidth, setWindowWidth] = useState(0);
   const [toggleIcon, setToggleIcon] = useState(false);
   const [activeSideBar, setActiveSideBar] = useState("Dashboard");
+  const { user } = useSelector((state) => state.user);
 
   const BreakPoint = () => {
     setBreakpoint(breakPoint === "sm" ? "no" : "sm");
@@ -81,45 +83,62 @@ export default function SideBar() {
                     style={{ fontSize: "25px" }}
                   ></i>
                 }
-                component={<Link to="/dashboard" />}
+                component={
+                  <Link
+                    to={user?.role === "Instructor" ? "/dashboard" : "/test"}
+                  />
+                }
                 className="mt-9 text-black"
                 onClick={() => handleActiveItem("Dashboard")}
                 active={activeSideBar === "Dashboard"}
               >
                 Dashboard
               </MenuItem>
-              <MenuItem
-                data-title="Students"
-                icon={
-                  <i className="fa-solid bg-[#FFEDDF] p-2 fa-1x text-2xl fa-users-gear"></i>
-                }
-                component={<Link to="/dashboard/Students" />}
-                className="mt-2 text-black"
-                onClick={() => handleActiveItem("Students")}
-                active={activeSideBar === "Students"}
-              >
-                Students
-              </MenuItem>
-
-              <MenuItem
-                data-title="Groups"
-                icon={
-                  <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-layer-group"></i>
-                }
-                component={<Link to="/dashboard/Groups" />}
-                className="mt-2 text-black"
-                onClick={() => handleActiveItem("Groups")}
-                active={activeSideBar === "Groups"}
-              >
-                Groups
-              </MenuItem>
+              {user?.role === "Instructor" ? (
+                <>
+                  <MenuItem
+                    data-title="Students"
+                    icon={
+                      <i className="fa-solid bg-[#FFEDDF] p-2 fa-1x text-2xl fa-users-gear"></i>
+                    }
+                    component={<Link to="/dashboard/Students" />}
+                    className="mt-2 text-black"
+                    onClick={() => handleActiveItem("Students")}
+                    active={activeSideBar === "Students"}
+                  >
+                    Students
+                  </MenuItem>
+                  <MenuItem
+                    data-title="Groups"
+                    icon={
+                      <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-layer-group"></i>
+                    }
+                    component={<Link to="/dashboard/Groups" />}
+                    className="mt-2 text-black"
+                    onClick={() => handleActiveItem("Groups")}
+                    active={activeSideBar === "Groups"}
+                  >
+                    Groups
+                  </MenuItem>
+                </>
+              ) : (
+                ""
+              )}
 
               <MenuItem
                 data-title="Quizzes"
                 icon={
                   <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-paste"></i>
                 }
-                component={<Link to="/dashboard/Quizzes" />}
+                component={
+                  <Link
+                    to={
+                      user?.role === "Instructor"
+                        ? "/dashboard/Quizzes"
+                        : "/test/quizzes"
+                    }
+                  />
+                }
                 className="mt-2 text-black"
                 onClick={() => handleActiveItem("Quizzes")}
                 active={activeSideBar === "Quizzes"}
@@ -132,7 +151,15 @@ export default function SideBar() {
                 icon={
                   <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-square-poll-vertical"></i>
                 }
-                component={<Link to="/dashboard/Results" />}
+                component={
+                  <Link
+                    to={
+                      user?.role === "Instructor"
+                        ? "/dashboard/results"
+                        : "/test/results"
+                    }
+                  />
+                }
                 className="mt-2 text-black"
                 onClick={() => handleActiveItem("Results")}
                 active={activeSideBar === "Results"}

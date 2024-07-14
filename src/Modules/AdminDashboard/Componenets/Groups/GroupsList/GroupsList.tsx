@@ -15,13 +15,16 @@ import {
   GroupInterface,
   StudentsInterface,
 } from "../../../../../InterFaces/InterFaces";
-import { getBaseUrl } from "../../../../../Utils/Utils";
 import NoData from "../../../../SharedModules/Components/NoData/NoData";
 import style from "../Groups.module.css";
+import { getBaseUrl } from "../../../../../Utils/Utils";
+import { useSelector } from "react-redux";
 
 const GroupsList = () => {
-  const token =
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjdkNTVlNmM4NWYxZWNkYmMyNmY1YzIiLCJlbWFpbCI6Im9tYXJiYXplZWRAZ21haWwuY29tIiwicm9sZSI6Ikluc3RydWN0b3IiLCJpYXQiOjE3MTk2NzE4NzUsImV4cCI6MTcyMzI3MTg3NX0.HQjkFkOkJDB1pr01-_4YgK5DcKs--7k8jSvXP4IP8rE";
+  const { token } = useSelector(
+    (state: { user: { token: string } }) => state.user
+  );
+  console.log(token);
   const animatedComponents = makeAnimated();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -51,14 +54,11 @@ const GroupsList = () => {
   // get all students array
   const getAllStudents = useCallback(async () => {
     try {
-      const res = await axios.get(
-        `https://upskilling-egypt.com:3005/api/student`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const res = await axios.get(`${getBaseUrl()}/api/student`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setAllStudents(
         res.data.map((student: StudentsInterface) => ({
@@ -78,7 +78,7 @@ const GroupsList = () => {
     try {
       const res = await axios.get(`${getBaseUrl()}/api/group`, {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
       setGroups(res.data);
@@ -113,10 +113,10 @@ const GroupsList = () => {
   const handleDelete = async () => {
     try {
       const res = await axios.delete(
-        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
+        `${getBaseUrl()}/api/group/${selectedGroup._id}`,
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -133,7 +133,7 @@ const GroupsList = () => {
   const handleAdd = async (formData: GroupFormData) => {
     try {
       const res = await axios.post(
-        `https://upskilling-egypt.com:3005/api/group`,
+        `${getBaseUrl()}/api/group`,
         {
           name: formData.groupName,
           students: selectedStudents.map(
@@ -142,7 +142,7 @@ const GroupsList = () => {
         },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -162,7 +162,7 @@ const GroupsList = () => {
     console.log(selectedGroup);
     try {
       const res = await axios.put(
-        `https://upskilling-egypt.com:3005/api/group/${selectedGroup._id}`,
+        `${getBaseUrl()}/api/group/${selectedGroup._id}`,
         {
           name: formData.groupName,
           students: selectedStudents.map(
@@ -171,7 +171,7 @@ const GroupsList = () => {
         },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -187,9 +187,9 @@ const GroupsList = () => {
   };
 
   useEffect(() => {
-    getAllStudents();
-    getAllGroups();
-  }, [getAllStudents, getAllGroups]);
+    token && getAllStudents();
+    token && getAllGroups();
+  }, [getAllStudents, getAllGroups, token]);
 
   // re-ender the app when the selected group changes to avoid the delay of changing the name of group
   useEffect(() => {

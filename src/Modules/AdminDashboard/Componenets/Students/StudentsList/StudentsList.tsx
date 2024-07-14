@@ -15,6 +15,8 @@ import {
 import { getBaseUrl } from "../../../../../Utils/Utils";
 import NoData from "../../../../SharedModules/Components/NoData/NoData";
 import studentImg from "../../../../../assets/images/studentImg.jpg"
+import ResponsivePaginationComponent from "react-responsive-pagination";
+import "react-responsive-pagination/themes/classic.css";
 import style from "../Students.module.css";
 
 const StudentsList = () => {
@@ -25,14 +27,24 @@ const StudentsList = () => {
   const [openViewModal, setopenViewModal] = useState(false);
   const { handleSubmit, reset } = useForm();
 
-  const [studentsList, setStudentsList] = useState([]);
+  const [studentList, setStudentList] = useState([]);
   const [studentId, setStudentId] = useState("");
   const [showView, setShowView] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState("");
+  // const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedStudentFirstName, setSelectedStudentFirstName] = useState("");
   const [selectedStudentLastName, setSelectedStudentLastName] = useState("");
   const [selectedStudentEmail, setSelectedStudentEmail] = useState("");
   const [selectedStudentRole, setSelectedStudentRole] = useState("");
+
+  const [selectedDeletedStudents, setSelectedDeletedStudents] = useState<{
+    _id: string;
+  }>({
+    _id: "",
+  });
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const pageSize = 16;
 
   // get all groups to display
   const getAllStudents = useCallback(async () => {
@@ -42,7 +54,9 @@ const StudentsList = () => {
           Authorization: token,
         },
       });
-      setStudentsList(res.data);
+      setStudentList(res.data);
+      // setStudents(res.data);
+      setTotalPages(Math.ceil(res.data.length / pageSize));
       console.log(res.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -80,10 +94,10 @@ const StudentsList = () => {
   };
 
   // delete the selected student
-  const handleDelete = async (studentId: number) => {
+  const handleDelete = async () => {
     try {
       const res = await axios.delete(
-        `https://upskilling-egypt.com:3005/api/student/${studentId}`,
+        `https://upskilling-egypt.com:3005/api/student/${selectedDeletedStudents._id}`,
         {
           headers: {
             Authorization: token,
@@ -93,18 +107,26 @@ const StudentsList = () => {
       handleClose();
       getAllStudents();
       toast.success(res.data.message);
+      // setDeletedStudent(studentId);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
       }
     }
   };
+
+
+  // here a small calculate to display the number of questions according to the page number and every click we slice the array of questions
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const students = studentList.slice(startIndex, endIndex);
   
   useEffect(() => {
     getAllStudents();
   }, [getAllStudents]);
 
   return (
+    <>
     <div className="flex justify-center m-auto">
       <div className="container px-4 py-5 mt-5 shadow project-body head-bg rounded-4">
         <div>
@@ -116,8 +138,8 @@ const StudentsList = () => {
               <li>Group 3</li>
             </ul>
             <ul className={`${style.responsiveTableProjects}`}>
-              {studentsList.length > 0 ? (
-                studentsList.map((student: StudentsInterface) => (
+              {students.length > 0 ? (
+                students.map((student: StudentsInterface) => (
                   <li
                     key={student._id}
                     className={`${style.tableRow} flex flex-col sm:flex-row items-center justify-between`}
@@ -155,8 +177,7 @@ const StudentsList = () => {
                           className="mb-0"
                           onClick={() => {
                             setOpenDeleteModal(true);
-                            // setSelectedStudent(studentId);
-                            // handleDelete(student._id);
+                            setSelectedDeletedStudents(student)
                           }}
                         >
                           <div className="flex items-center justify-center">
@@ -234,6 +255,17 @@ const StudentsList = () => {
         </DialogPanel>
       </Dialog>
     </div>
+    
+      {/* Pagination */}
+
+      <div className="m-5">
+        <ResponsivePaginationComponent
+          current={currentPage}
+          total={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
+    </>
   );
 };
 

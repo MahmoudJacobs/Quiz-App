@@ -31,6 +31,22 @@ export interface GroupInterface {
   name: string;
   students: [];
 }
+export interface SingleQuizInterface {
+  _id: string;
+  name: string;
+  group: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  participants: number;
+}
+export interface SingleStudentInterface {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  status: string;
+  email: string;
+}
 export interface QuizzCreateInterface {
   title: string;
   description: string;
@@ -41,4 +57,32 @@ export interface QuizzCreateInterface {
   schadule: string;
   duration: string;
   score_per_question: string;
+}
+
+export interface QuizzJoinInterface {
+  code: string;
+}
+export interface QuestionsInterface {
+  _id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+  type: string;
+  options: { A: string; B: string; C: string; D: string };
+  instructor: string;
+  answer: string;
+}
+export interface ResultsInterface {
+  quiz: {
+    _id: string;
+    title: string;
+    group: string;
+    difficulty: string;
+    type: string;
+    instructor: string;
+    status: string;
+    score_per_question: number;
+    createdAt: string;
+  };
+  participants: string[];
 }
