@@ -14,6 +14,7 @@ import {
 } from "../../../../../InterFaces/InterFaces";
 import { getBaseUrl } from "../../../../../Utils/Utils";
 import NoData from "../../../../SharedModules/Components/NoData/NoData";
+import studentImg from "../../../../../assets/images/studentImg.jpg"
 import style from "../Students.module.css";
 
 const StudentsList = () => {
@@ -21,30 +22,17 @@ const StudentsList = () => {
     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjdkNTVlNmM4NWYxZWNkYmMyNmY1YzIiLCJlbWFpbCI6Im9tYXJiYXplZWRAZ21haWwuY29tIiwicm9sZSI6Ikluc3RydWN0b3IiLCJpYXQiOjE3MTk2NzE4NzUsImV4cCI6MTcyMzI3MTg3NX0.HQjkFkOkJDB1pr01-_4YgK5DcKs--7k8jSvXP4IP8rE";
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
+  const [openViewModal, setopenViewModal] = useState(false);
+  const { handleSubmit, reset } = useForm();
 
-  const [allStudents, setAllStudents] = useState<StudentsInterface[]>([
-    {
-      _id: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      status: false,
-      role: "",
-      // students: [],
-    },
-  ]);
-  const [students, setStudents] = useState([]);
-  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [studentsList, setStudentsList] = useState([]);
   const [studentId, setStudentId] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState<{
-    name: string;
-    _id: string;
-  }>({
-    name: "",
-    _id: "",
-  });
+  const [showView, setShowView] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedStudentFirstName, setSelectedStudentFirstName] = useState("");
+  const [selectedStudentLastName, setSelectedStudentLastName] = useState("");
+  const [selectedStudentEmail, setSelectedStudentEmail] = useState("");
+  const [selectedStudentRole, setSelectedStudentRole] = useState("");
 
   // get all groups to display
   const getAllStudents = useCallback(async () => {
@@ -54,7 +42,7 @@ const StudentsList = () => {
           Authorization: token,
         },
       });
-      setStudents(res.data);
+      setStudentsList(res.data);
       console.log(res.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -63,27 +51,36 @@ const StudentsList = () => {
     }
   }, [token]);
 
-  // variable submmition for add , delete and edit
+  // variable submmition for add , delete and view
   const onSubmit = async (formData: StudentFormData) => {
     if (openDeleteModal) {
       await handleDelete(studentId);
-    } else if (openEditModal) {
-      await handleEdit(formData);
+    } else if (openViewModal) {
+      await handleShowStudent(studentId);
     } else if (openAddModal) {
       await handleAdd(formData);
     }
   };
+
   // close the modal for all
   const handleClose = () => {
     setOpenAddModal(false);
-    setOpenEditModal(false);
+    setopenViewModal(false);
     setOpenDeleteModal(false);
     reset();
-    // setSelectedGroup({ _id: "", name: "" });
+  };
+
+  // view selected student
+  const handleShowStudent = (student: StudentsInterface) => {
+    setSelectedStudentFirstName(student.first_name);
+    setSelectedStudentLastName(student.last_name);
+    setSelectedStudentEmail(student.email);
+    setSelectedStudentRole(student.role);
+    setShowView(true);
   };
 
   // delete the selected student
-  const handleDelete = async (studentId: string) => {
+  const handleDelete = async (studentId: number) => {
     try {
       const res = await axios.delete(
         `https://upskilling-egypt.com:3005/api/student/${studentId}`,
@@ -102,60 +99,8 @@ const StudentsList = () => {
       }
     }
   };
-  // add a new student
-  const handleAdd = async (formData: StudentFormData) => {
-    try {
-      const res = await axios.post(
-        `https://upskilling-egypt.com:3005/api/student`,
-        {
-          name: formData.first_name,
-          phone: formData.phone,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      // getAllStudents();
-      handleClose();
-      // setSelectedGroup({ _id: "", name: "" });
-      toast.success(res.data.message);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      }
-    }
-  };
-
-  // edit the selected student
-  const handleEdit = async (formData: StudentFormData) => {
-    try {
-      const res = await axios.put(
-        `https://upskilling-egypt.com:3005/api/student/${selectedStudent.id}`,
-        {
-          name: formData.first_name,
-          phone: formData.phone,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      getAllStudents();
-      handleClose();
-      // setSelectedGroup({ _id: "", name: "" });
-      toast.success(res.data.message);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      }
-    }
-  };
-
+  
   useEffect(() => {
-    // getAllStudents();
     getAllStudents();
   }, [getAllStudents]);
 
@@ -163,72 +108,60 @@ const StudentsList = () => {
     <div className="flex justify-center m-auto">
       <div className="container px-4 py-5 mt-5 shadow project-body head-bg rounded-4">
         <div>
-          <div className="flex items-center justify-end">
-            {/*add btn */}
-            <button
-              className="px-4 py-2 border border-gray-600 rounded-2xl"
-              onClick={() => {
-                setOpenAddModal(true);
-              }}
-            >
-              <i className="fa-solid fa-plus"></i> Add Student
-            </button>
-          </div>
           <section className="my-4">
             <h1 className="mb-3 text-xl text-bold">Students List</h1>
             <ul className={`${style.groups}`}>
-            <li>Group 1</li>  
-            <li>Group 2</li>  
-            <li>Group 3</li>  
+              <li>Group 1</li>
+              <li>Group 2</li>
+              <li>Group 3</li>
             </ul>
             <ul className={`${style.responsiveTableProjects}`}>
-              {students.length > 0 ? (
-                students.map((student: StudentsInterface) => (
+              {studentsList.length > 0 ? (
+                studentsList.map((student: StudentsInterface) => (
                   <li
                     key={student._id}
                     className={`${style.tableRow} flex flex-col sm:flex-row items-center justify-between`}
                   >
                     <div
-                      className={`${style.col} flex flex-col gap-2`}
+                      className={`${style.col} flex justify-items-center`}
                       data-label="Name :"
                     >
-                      <span> {student?.first_name} {student?.last_name} </span>
+                      <img style={{width: "40px"}} src={studentImg} alt="student image" />
+                      <span style={{display: "flex", alignItems: "center"}}> {student?.first_name} {student?.last_name} </span>
                     </div>
                     <div
                       className={`${style.col} p-0 flex items-between justify-start sm:justify-end`}
                       data-label="Actions :"
                     >
                       <ul className="flex items-center justify-center gap-3 p-0 m-0">
+
+                        {/* View button */}
+                        <button
+                          role="button"
+                          className="mb-0"
+                          onClick={() => {
+                            setopenViewModal(true);
+                            handleShowStudent(student)
+                          }}
+                        >
+                          <div className="flex items-center justify-center">
+                            <i className="mx-2 fas fa-eye"></i>
+                            <span className="hidden sm:inline">View</span>
+                          </div>
+                        </button>
                         {/* Delete button */}
                         <button
                           role="button"
                           className="mb-0"
                           onClick={() => {
                             setOpenDeleteModal(true);
-                            setSelectedStudent(student);
+                            // setSelectedStudent(studentId);
+                            // handleDelete(student._id);
                           }}
                         >
                           <div className="flex items-center justify-center">
                             <i className="mx-2 fa-regular fa-trash-can"></i>
                             <span className="hidden sm:inline">Delete</span>
-                          </div>
-                        </button>
-                        {/* Edit button */}
-                        <button
-                          role="button"
-                          className="mb-0"
-                          onClick={() => {
-                            setOpenEditModal(true);
-                            const filteredStudents = allStudents.filter(
-                              (student) =>
-                                student.includes(student.value)
-                            );
-                            setSelectedStudents(filteredStudents);
-                          }}
-                        >
-                          <div className="flex items-center justify-center">
-                            <i className="mx-2 fa-regular fa-pen-to-square "></i>
-                            <span className="hidden sm:inline">Edit</span>
                           </div>
                         </button>
                       </ul>
@@ -242,13 +175,14 @@ const StudentsList = () => {
           </section>
         </div>
       </div>
+
       {/* Modal */}
       <Dialog
         className="fixed inset-0 z-50 overflow-y-auto"
-        open={openAddModal || openDeleteModal || openEditModal}
+        open={openAddModal || openDeleteModal || openViewModal}
         onClose={() => {
           setOpenAddModal(false);
-          setOpenEditModal(false);
+          setopenViewModal(false);
           setOpenDeleteModal(false);
           reset();
         }}
@@ -260,8 +194,8 @@ const StudentsList = () => {
             <DialogTitle className="text-xl font-semibold text-gray-800">
               {openDeleteModal
                 ? "Delete Student"
-                : openEditModal
-                  ? "Edit Student"
+                : openViewModal
+                  ? "Student Details"
                   : "Add Student"}
             </DialogTitle>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
@@ -271,34 +205,21 @@ const StudentsList = () => {
                 </p>
               ) : (
                 <>
-                  <div className="mb-4">
-                    <input
-                      type="text"
-                      {...register("groupName")}
-                      // defaultValue={selectedStudent.first_name || ""}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      placeholder="Enter Student Name"
-                    />
+                  <div>
+                    <p className="">{`Name: ${selectedStudentFirstName} ${selectedStudentLastName}`}</p>
+                    <p className="">{`Email: ${selectedStudentEmail}`}</p>
+                    <p className="">{`Role: ${selectedStudentRole}`}</p>
                   </div>
-                    <div className="mb-4">
-                      <input
-                        type="tel"
-                        {...register("groupName")}
-                        // defaultValue={selectedStudent.first_name || ""}
-                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Phone"
-                      />
-                    </div>
-                  
+
                 </>
               )}
               <div className="flex justify-end mt-4">
                 <button
                   type="submit"
                   className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                  onClick={() => handleDelete(studentId)}
+                  onClick={() => handleDelete(student._id)}
                 >
-                  {openDeleteModal ? "Delete" : openEditModal ? "Edit" : "Add"}
+                  {openDeleteModal ? "Delete" : openViewModal ? "View" : "Add"}
                 </button>
                 <button
                   type="button"
