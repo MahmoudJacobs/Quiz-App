@@ -1,25 +1,36 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./Modules/AdminDashboard/Componenets/Dashboard/Dashboard";
 import GroupsList from "./Modules/AdminDashboard/Componenets/Groups/GroupsList/GroupsList";
+import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
+import QuestionsList from "./Modules/AdminDashboard/Componenets/Quizzes/QuestionsList/QuestionsList";
 import QuizzesList from "./Modules/AdminDashboard/Componenets/Quizzes/QuizzesList/QuizzesList";
 import ResultsList from "./Modules/AdminDashboard/Componenets/Results/ResultsList/ResultsList";
+import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
 import ChangePassword from "./Modules/AuthModule/Components/ChangePassword";
 import ForgetPassword from "./Modules/AuthModule/Components/ForgetPassword/ForgetPassword";
 import Login from "./Modules/AuthModule/Components/Login/Login";
 import Register from "./Modules/AuthModule/Components/Register/Register";
 import ResetPassword from "./Modules/AuthModule/Components/ResetPassword/ResetPassword";
+import SignInUp from "./Modules/AuthModule/Components/SignIn-up/SignInUp";
 import AuthLayout from "./Modules/SharedModules/Components/Layouts/AuthLayout/AuthLayout";
 import DashboardLayout from "./Modules/SharedModules/Components/Layouts/DashboardLayout/DashboardLayout";
+import TDashboardLayout from "./Modules/SharedModules/Components/Layouts/TDashboardLayout/TDashboardLayout";
 import NoData from "./Modules/SharedModules/Components/NoData/NoData";
 import TestDashboard from "./Modules/TestModule/Components/TestDashboard/TestDashboard";
-import TDashboardLayout from "./Modules/SharedModules/Components/Layouts/TDashboardLayout/TDashboardLayout";
 import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes";
 import TestResults from "./Modules/TestModule/Components/TestResults";
-import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
-import SignInUp from "./Modules/AuthModule/Components/SignIn-up/SignInUp";
-import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
+import { setToken } from "./Redux/UserSlice";
 
 export default function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    if (storedToken) {
+      dispatch(setToken(storedToken));
+    }
+  }, [dispatch]);
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -76,11 +87,15 @@ export default function App() {
         },
         {
           path: "quizzes/:id",
-          element: <QuizzDetails />
+          element: <QuizzDetails />,
         },
         {
           path: "results",
           element: <ResultsList />,
+        },
+        {
+          path: "questions",
+          element: <QuestionsList />,
         },
       ],
     },
@@ -104,9 +119,5 @@ export default function App() {
       ],
     },
   ]);
-  return (
-    <>
-      <RouterProvider router={routes} />
-    </>
-  );
+  return <RouterProvider router={routes} />;
 }

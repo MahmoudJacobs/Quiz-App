@@ -6,7 +6,6 @@ import quizzpic from '../../../../assets/images/Quiz img span.svg'
 import vector from '../../../../assets/images/Vector2.svg'
 import { QuizzJoinInterface } from "../../../../InterFaces/InterFaces";
 import success from '../../../../assets/images/success.svg'
-
 import { useForm } from "react-hook-form";
 import {
   Dialog,

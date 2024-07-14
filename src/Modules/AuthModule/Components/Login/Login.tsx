@@ -1,23 +1,25 @@
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { LoginFormTypes } from "../../../../InterFaces/InterFaces";
+import { setToken } from "../../../../Redux/UserSlice";
 import {
   emailValidation,
   passwordValidation,
 } from "../../../../Utils/InputValidations";
-import { FieldText, FieldPassword, SubmitBtn } from "../Input/InputField";
-import axios from "axios";
 import { getBaseUrl } from "../../../../Utils/Utils";
-import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { FieldPassword, FieldText, SubmitBtn } from "../Input/InputField";
 
-export default function login() {
+export default function Login() {
   const navigate = useNavigate();
   const {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormTypes>();
-
+  const dispatch = useDispatch();
   const onSubmit = async (data: LoginFormTypes) => {
     try {
       const response = await axios.post(
@@ -31,8 +33,8 @@ export default function login() {
       );
 
       toast.success(response.data.message);
-      console.log(response);
-
+      localStorage.setItem("accessToken", response.data.data.accessToken);
+      dispatch(setToken(response.data.data.accessToken));
       navigate("/dashboard");
     } catch (err) {
       toast.error(err.response.data.message);
