@@ -111,6 +111,9 @@ export default function QuestionsList() {
         }
       }
     }
+    if (openDeleteModal) {
+      handleDelete();
+    }
   };
 
   const handleDelete = async () => {
@@ -245,7 +248,6 @@ export default function QuestionsList() {
                       onClick={() => {
                         setOpenDeleteModal(true);
                         setSelectedQuestion(quest);
-                        handleDelete();
                       }}
                     >
                       <div

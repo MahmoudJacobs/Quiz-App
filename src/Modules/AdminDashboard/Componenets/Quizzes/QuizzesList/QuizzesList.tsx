@@ -57,7 +57,7 @@ export default function QuizzesList() {
         toast.success("Copied to clipboard !");
       })
       .catch((err) => {
-        toast.error("Failed to Copy !");
+        toast.error(err.message || "Failed to Copy !");
       });
   };
 
@@ -169,12 +169,13 @@ export default function QuizzesList() {
       );
       const quizzes = response.data;
       setCompletedQuizList(quizzes);
-      console.log(quizzes);
       quizzes.forEach((quiz) => {
         getGroupDetails(quiz.group);
       });
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "Failed to book");
+      }
     }
   };
 
@@ -190,7 +191,9 @@ export default function QuizzesList() {
       );
       setUpcomingQuizList(response.data);
     } catch (error) {
-      console.log(error.response);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || "Failed to book");
+      }
     }
   };
 
