@@ -37,3 +37,7 @@ export interface QuizzCreateInterface {
   duration: string;
   score_per_question: string;
 }
+
+export interface QuizzJoinInterface {
+  code: string;
+}

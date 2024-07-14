@@ -21,7 +21,7 @@ import style from "../Groups.module.css";
 
 const GroupsList = () => {
   const token =
-    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjdkNTVlNmM4NWYxZWNkYmMyNmY1YzIiLCJlbWFpbCI6Im9tYXJiYXplZWRAZ21haWwuY29tIiwicm9sZSI6Ikluc3RydWN0b3IiLCJpYXQiOjE3MTk2NzE4NzUsImV4cCI6MTcyMzI3MTg3NX0.HQjkFkOkJDB1pr01-_4YgK5DcKs--7k8jSvXP4IP8rE";
+    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2Njg3MTg1OGM4NWYxZWNkYmMyOTYwZTQiLCJlbWFpbCI6Im1haG1vdWQ3emVyb0B5YWhvby5jb20iLCJyb2xlIjoiSW5zdHJ1Y3RvciIsImlhdCI6MTcyMDIzMDczNywiZXhwIjoxNzIzODMwNzM3fQ.AlvPte15moOgcL_GrQPlqk5UwtEdyUxjTlMp3DrTroE";
   const animatedComponents = makeAnimated();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
