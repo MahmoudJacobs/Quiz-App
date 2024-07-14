@@ -11,6 +11,7 @@ import { Link, useParams } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { toast } from "react-toastify";
+import { getBaseUrl } from "../../../../Utils/Utils";
 import { useSelector } from "react-redux";
 import { QuizzCreateInterface } from "../../../../InterFaces/InterFaces";
 
@@ -87,7 +88,7 @@ export default function QuizzDetails() {
   const getQuizzDetails = async () => {
     try {
       const response = await axios.get(
-        `https://upskilling-egypt.com:3005/api/quiz/${id}`,
+        `${getBaseUrl()}/api/quiz/${id}`,
         {
           headers: {
             authorization: `Bearer ${token}`,
@@ -106,7 +107,7 @@ export default function QuizzDetails() {
   const updateQuizz = async (formData: QuizzCreateInterface) => {
     try {
       const response = await axios.put(
-        `https://upskilling-egypt.com:3005/api/quiz/${id}`,
+        `${getBaseUrl()}/api/quiz/${id}`,
         {
           title: formData.title,
           description: formData.description,

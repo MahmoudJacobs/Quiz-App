@@ -6,7 +6,9 @@ import quizzpic from "../../../../assets/images/Quiz img span.svg";
 import vector from "../../../../assets/images/Vector2.svg";
 import { QuizzJoinInterface } from "../../../../InterFaces/InterFaces";
 import success from "../../../../assets/images/success.svg";
+import { getBaseUrl } from "../../../../Utils/Utils";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogBackdrop,
@@ -15,6 +17,7 @@ import {
 } from "@headlessui/react";
 
 export default function TestQuizzes() {
+  const navigate = useNavigate();
   const [upcomingQuizList, setUpcomingQuizList] = useState([]);
   const [completedQuizList, setCompletedQuizList] = useState([]);
   const [openJoinModal, setOpenJoinModal] = useState(false);
@@ -24,6 +27,10 @@ export default function TestQuizzes() {
 
   const handleClose = () => {
     setOpenJoinModal(false);
+  };
+
+  const handleOpenQuiz = (quizId: string) => {
+    navigate(`/dashboard/quizzes/${quizId}`);
   };
 
   const onSubmit = async (data) => {
@@ -45,17 +52,16 @@ export default function TestQuizzes() {
 
   const getUpcomingQuizz = async () => {
     try {
-      const response = await axios.get(
-        "https://upskilling-egypt.com:3005/api/quiz/incomming",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axios.get(`${getBaseUrl()}/api/quiz/incomming`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       setUpcomingQuizList(response.data);
     } catch (error) {
-      console.log(error.response);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message[0]);
+      }
     }
   };
 
@@ -77,7 +83,7 @@ export default function TestQuizzes() {
   const JoinQuizSubmit = async (formData: QuizzJoinInterface) => {
     try {
       const response = await axios.post(
-        `https://upskilling-egypt.com:3005/api/quiz/join`,
+        `${getBaseUrl()}/api/quiz/join`,
         {
           code: formData.code,
         },
@@ -91,7 +97,9 @@ export default function TestQuizzes() {
       handleClose();
       setOpenSuccessModal(true);
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message[0]);
+      }
     }
   };
 
