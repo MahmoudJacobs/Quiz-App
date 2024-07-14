@@ -160,7 +160,7 @@ export default function QuizzesList() {
   const getCompletedQuizz = async () => {
     try {
       const response = await axios.get(
-        "https://upskilling-egypt.com:3005/api/quiz/completed",
+        `${getBaseUrl()}/api/quiz/completed`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -182,7 +182,7 @@ export default function QuizzesList() {
   const getUpcomingQuizz = async () => {
     try {
       const response = await axios.get(
-        "https://upskilling-egypt.com:3005/api/quiz/incomming",
+        `${getBaseUrl()}/api/quiz/incomming`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -200,7 +200,7 @@ export default function QuizzesList() {
   const createQuizSubmit = async (formData: QuizzCreateInterface) => {
     try {
       const response = await axios.post(
-        `https://upskilling-egypt.com:3005/api/quiz`,
+        `${getBaseUrl()}/api/quiz`,
         {
           title: formData.title,
           description: formData.description,
@@ -255,7 +255,6 @@ export default function QuizzesList() {
   useEffect(() => {
     getCompletedQuizz();
     getAllGroups();
-    getCompletedQuizz();
     getUpcomingQuizz();
   }, []);
 
