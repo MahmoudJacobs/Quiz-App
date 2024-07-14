@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavLogo from "../../../../assets/images/navLogo.png";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-
+  const { user } = useSelector((s) => s.user);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -60,7 +61,9 @@ export default function Navbar() {
                       src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                       alt=""
                     />
-                    <span>omar bazeed</span>
+                    <span>
+                      {user.first_name} {user.last_name}
+                    </span>
                     <span>
                       <i className="fa fa-angle-down"> </i>
                     </span>
