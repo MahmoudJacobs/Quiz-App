@@ -261,34 +261,38 @@ export default function QuizzesList() {
 
   return (
     <>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-around flex-wrap">
         {/*New Quizz and Questions Bank*/}
-        <div className="w-6/12 flex flex-wrap flex-row p-5 container">
-          <div className="p-5">
+        <div className="flex flex-wrap flex-row ms-3 justify-center sm:justify-start">
+          <div className="py-4">
             <button
               onClick={() => {
                 setOpenAddModal(true);
               }}
-              className="w-full border border-gray-300 rounded-md flex flex-col items-center hover:bg-gray-300"
+              className="border border-gray-300 rounded-md flex flex-col items-center hover:bg-gray-300"
             >
               <img className="mt-6" src={newQuizzPic} />
-              <p className="text-xl font-bold px-10 py-5 ">Set up a new quiz</p>
+              <p className="text-lg sm:text-xl font-bold px-8 py-5 ">
+                Set up a new quiz
+              </p>
             </button>
           </div>
 
           <Link to="/dashboard/questions" className="p-5">
-            <button className="w-full border border-gray-300 rounded-md flex flex-col items-center hover:bg-gray-300">
+            <button className="border border-gray-300 rounded-md flex flex-col items-center hover:bg-gray-300">
               <img className="mt-6" src={questionBank} />
-              <p className="text-xl font-bold px-10 py-5 ">Questions Bank</p>
+              <p className="text-lg sm:text-xl font-bold px-10 py-5 ">
+                Questions Bank
+              </p>
             </button>
           </Link>
         </div>
 
         {/*upcoming and completed quizz*/}
-        <div className="flex flex-col p-10">
+        <div className="flex flex-col p-5">
           <div className="border border-gray-300 w-full rounded-lg">
             <p className="font-bold text-left p-5">Upcoming quizzes</p>
-            <div className="p-5">
+            <div className="p-3">
               {upcomingQuizList.map(
                 (
                   quiz: {
@@ -301,7 +305,7 @@ export default function QuizzesList() {
                 ) => (
                   <div
                     key={index}
-                    className="border border-gray-300 rounded-lg p-5 flex flex-row text-left mb-5"
+                    className="border border-gray-300 rounded-lg p-3 flex flex-row text-left mb-5"
                   >
                     <img src={quizzpic} />
                     <div className="flex-col p-3">
@@ -312,8 +316,10 @@ export default function QuizzesList() {
                           timeStyle: "short",
                         })}
                       </p>
-                      <div className="flex flex-row justify-between mt-4 font-bold">
-                        <p>No. of student's enrolled: {quiz.participants}</p>
+                      <div className="flex flex-row justify-between mt-4 sm:font-bold ">
+                        <p className="text-[16px] sm:text-lg">
+                          No. of student's enrolled: {quiz.participants}
+                        </p>
                         <button onClick={() => handleOpenQuiz(`${quiz._id}`)}>
                           <p className="hover:underline ml-10">Open</p>
                         </button>
@@ -327,8 +333,8 @@ export default function QuizzesList() {
         </div>
       </div>
 
-      <div className="flex flex-col items-end p-10">
-        <div className="rounded-lg flex flex-col w-2/4 items-end border border-gray-300">
+      <div className="flex flex-col items-end p-8">
+        <div className="rounded-lg flex flex-col w-full items-end border border-gray-300">
           <div className="rounded-lg w-full flex flex-row justify-between">
             <p className="font-bold text-left p-5">Completed Quizzes</p>
             <button className="flex flext-row items-center p-5 hover:underline">
@@ -337,16 +343,22 @@ export default function QuizzesList() {
             </button>
           </div>
 
-          <div className="flex p-5">
-            <table className="border-separate border border-slate-400 text-center rounded">
+          <div className="w-full flex p-5 items-center justify-center m-auto">
+            <table className="w-full border-separate border border-slate-400 text-center rounded m-auto">
               <thead className="bg-black text-white">
                 <tr>
-                  <th className="border border-slate-300">Title</th>
-                  <th className="border border-slate-300 p-2">Group name</th>
-                  <th className="border border-slate-300 p-2">
+                  <th className="border border-slate-300 text-sm sm:text-xl">
+                    Title
+                  </th>
+                  <th className="border border-slate-300 text-sm sm:text-xl p-2">
+                    Group name
+                  </th>
+                  <th className="border border-slate-300 text-sm sm:text-xl p-2">
                     No. of persons in group
                   </th>
-                  <th className="border border-slate-300">Date</th>
+                  <th className="border border-slate-300 text-sm sm:text-xl">
+                    Date
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -358,16 +370,16 @@ export default function QuizzesList() {
                     schadule: string;
                   }) => (
                     <tr key={quiz._id}>
-                      <td className="border border-slate-300 rounded p-5">
+                      <td className="border border-slate-300 text-sm sm:text-xl rounded p-5">
                         {quiz.title}
                       </td>
-                      <td className="border border-slate-300 rounded">
+                      <td className="border border-slate-300 text-sm sm:text-xl rounded">
                         FirstGroup-MM
                       </td>
-                      <td className="border border-slate-300 rounded">
+                      <td className="border border-slate-300 text-sm sm:text-xl rounded">
                         {quiz.participants}
                       </td>
-                      <td className="border border-slate-300 rounded p-3">
+                      <td className="border border-slate-300 text-sm sm:text-xl rounded p-3">
                         {new Date(quiz.schadule).toLocaleString("en-US", {
                           dateStyle: "short",
                           timeStyle: "short",
