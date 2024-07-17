@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  createHashRouter,
-  RouterProvider
-} from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./Modules/AdminDashboard/Componenets/Dashboard/Dashboard";
 import GroupsList from "./Modules/AdminDashboard/Componenets/Groups/GroupsList/GroupsList";
 import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
@@ -25,7 +22,6 @@ import TestDashboard from "./Modules/TestModule/Components/TestDashboard/TestDas
 import TestQuizzes from "./Modules/TestModule/Components/TestQuizzes/TestQuizzes";
 import TestResults from "./Modules/TestModule/Components/TestResults";
 import { setToken } from "./Redux/UserSlice";
-
 export default function App() {
   const dispatch = useDispatch();
   useEffect(() => {
