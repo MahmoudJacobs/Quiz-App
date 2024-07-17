@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createHashRouter,
+  RouterProvider
+} from "react-router-dom";
 import Dashboard from "./Modules/AdminDashboard/Componenets/Dashboard/Dashboard";
 import GroupsList from "./Modules/AdminDashboard/Componenets/Groups/GroupsList/GroupsList";
 import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/QuizzDetails";
@@ -31,7 +34,7 @@ export default function App() {
       dispatch(setToken(storedToken));
     }
   }, [dispatch]);
-  const routes = createBrowserRouter([
+  const routes = createHashRouter([
     {
       path: "/",
       element: <AuthLayout />,
