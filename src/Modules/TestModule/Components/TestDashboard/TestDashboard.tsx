@@ -1,5 +1,6 @@
 import quizImg from "../../../../assets/images/quizImg.png";
 import studentImg from "../../../../assets/images/studentImg.png";
+import { Link } from "react-router-dom";
 
 export default function TestDashboard() {
   return (
@@ -10,10 +11,12 @@ export default function TestDashboard() {
           <div className="left border border-gray-300 w-full p-4">
             <div className="header flex items-center justify-between p-4">
               <h4>Upcoming 5 quizzes</h4>
-              <p className="flex items-center justify-center">
-                see all quizzes
-                <i className="fa-solid fa-arrow-right-long mx-1"></i>
-              </p>
+              <Link to="/test/quizzes">
+                <p className="flex items-center justify-center">
+                  see all quizzes
+                  <i className="fa-solid fa-arrow-right-long mx-1"></i>
+                </p>
+              </Link>
             </div>
             <hr />
             <div className="list p-2">
@@ -42,10 +45,7 @@ export default function TestDashboard() {
           <div className="left border border-gray-300 w-full p-4">
             <div className="header flex items-center justify-between p-4">
               <h4>Top 5 Results</h4>
-              <p className="flex items-center justify-center">
-                see all Results
-                <i className="fa-solid fa-arrow-right-long mx-1"></i>
-              </p>
+              
             </div>
             <hr />
             <div className="list p-2">

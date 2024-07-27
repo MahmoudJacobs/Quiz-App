@@ -145,8 +145,8 @@ export default function SideBar() {
               >
                 Quizzes
               </MenuItem>
-
-              <MenuItem
+              {user?.role === "Instructor" ? (
+                <MenuItem
                 data-title="Results"
                 icon={
                   <i className="fa-solid bg-[#FFEDDF] p-2 px-3 fa-1x text-2xl fa-square-poll-vertical"></i>
@@ -166,6 +166,10 @@ export default function SideBar() {
               >
                 Results
               </MenuItem>
+              ) : (
+                ""
+              )}
+              
             </div>
           </Menu>
         </Sidebar>

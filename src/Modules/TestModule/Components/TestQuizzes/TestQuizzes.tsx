@@ -144,6 +144,38 @@ export default function TestQuizzes() {
                     </div>
                   </div>
                 </div>
+
+                <div
+                  className="border border-gray-300 rounded-lg p-5 flex flex-row text-left mb-5"
+                >
+                  <img src={quizzpic} />
+                  <div className="flex-col p-3">
+                    <p className="font-bold mb-2">Data Structure and Algorithms</p>
+                    <p>
+                      7/03/2025
+                    </p>
+                    <div className="flex flex-row justify-between mt-4 font-bold">
+                      <p>No. of student's enrolled: 5</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="border border-gray-300 rounded-lg p-5 flex flex-row text-left mb-5"
+                >
+                  <img src={quizzpic} />
+                  <div className="flex-col p-3">
+                    <p className="font-bold mb-2">Theory of Computation</p>
+                    <p>
+                      15/03/2025
+                    </p>
+                    <div className="flex flex-row justify-between mt-4 font-bold">
+                      <p>No. of student's enrolled: 4</p>
+                    </div>
+                  </div>
+                </div>
+
+                
             </div>
           </div>
 
