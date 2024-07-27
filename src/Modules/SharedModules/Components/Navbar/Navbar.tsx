@@ -62,7 +62,7 @@ export default function Navbar() {
                       alt=""
                     />
                     <span>
-                      {user.first_name} {user.last_name}
+                      {user?.first_name} {user?.last_name}
                     </span>
                     <span>
                       <i className="fa fa-angle-down"> </i>

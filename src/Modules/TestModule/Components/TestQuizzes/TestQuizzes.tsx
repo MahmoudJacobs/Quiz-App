@@ -129,81 +129,25 @@ export default function TestQuizzes() {
           <div className="border border-gray-300 lg:w-6/12 rounded-lg">
             <p className="font-bold text-left p-5">Upcoming quizzes</p>
             <div className="p-5">
-              {upcomingQuizList.map((quiz, index) => (
+              
                 <div
-                  key={index}
                   className="border border-gray-300 rounded-lg p-5 flex flex-row text-left mb-5"
                 >
                   <img src={quizzpic} />
                   <div className="flex-col p-3">
-                    <p className="font-bold mb-2">{quiz.title}</p>
+                    <p className="font-bold mb-2">Introduction to SQL Databases</p>
                     <p>
-                      {new Date(quiz.schadule).toLocaleString("en-US", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
+                      28/02/2025
                     </p>
                     <div className="flex flex-row justify-between mt-4 font-bold">
-                      <p>No. of student's enrolled: {quiz.participants}</p>
-                      <button onClick={() => handleOpenQuiz(`${quiz._id}`)}>
-                        <p className="hover:underline ml-10">Open</p>
-                      </button>
+                      <p>No. of student's enrolled: 2</p>
                     </div>
                   </div>
                 </div>
-              ))}
             </div>
           </div>
 
-          <div className="flex flex-col items-start p-10">
-            <div className="rounded-lg flex flex-col lg:w-6/12 items-end border border-gray-300">
-              <div className="rounded-lg w-full flex flex-row justify-between">
-                <p className="font-bold text-left p-5">Completed Quizzes</p>
-                <button className="flex flext-row items-center p-5 hover:underline">
-                  <p className="mr-3">Results</p>
-                  <img src={vector} />
-                </button>
-              </div>
-
-              <div className="flex p-5">
-                <table className="border-separate border border-slate-400 text-center rounded">
-                  <thead className="bg-black text-white">
-                    <tr>
-                      <th className="border border-slate-300">Title</th>
-                      <th className="border border-slate-300 p-2">
-                        Group name
-                      </th>
-                      <th className="border border-slate-300 p-2">
-                        No. of persons in group
-                      </th>
-                      <th className="border border-slate-300">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {completedQuizList.map((quiz) => (
-                      <tr key={quiz._id}>
-                        <td className="border border-slate-300 rounded p-5">
-                          {quiz.title}
-                        </td>
-                        <td className="border border-slate-300 rounded">
-                          FirstGroup-MM
-                        </td>
-                        <td className="border border-slate-300 rounded">
-                          {quiz.participants}
-                        </td>
-                        <td className="border border-slate-300 rounded p-3">
-                          {new Date(quiz.schadule).toLocaleString("en-US", {
-                            dateStyle: "short",
-                            timeStyle: "short",
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          
 
           <Dialog
             className="fixed inset-0 z-50 overflow-y-auto"
