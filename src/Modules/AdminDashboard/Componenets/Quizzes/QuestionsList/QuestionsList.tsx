@@ -153,12 +153,12 @@ export default function QuestionsList() {
   const currentQuestions = questions.slice(startIndex, endIndex);
 
   return (
-    <div className="container mx-auto mt-2 relative border border-gray-400 p-4 ">
-      <div className="data-header flex justify-between items-center">
-        <h2 className="font-bold text-xl">Bank Of Questions</h2>
+    <div className="container relative p-4 mx-auto mt-2 border border-gray-400 ">
+      <div className="flex items-center justify-between data-header">
+        <h2 className="text-xl font-bold">Bank Of Questions</h2>
         <button
           type="button"
-          className="border border-black p-3 rounded-lg"
+          className="p-3 border border-black rounded-lg"
           onClick={() => setOpenAddModal(true)}
         >
           + add question
@@ -212,7 +212,7 @@ export default function QuestionsList() {
                   className={`${style.col} ${style.col3} flex items-center justify-between`}
                   data-label="Actions :"
                 >
-                  <ul className="flex items-center justify-center m-0 p-0">
+                  <ul className="flex items-center justify-center p-0 m-0">
                     <li
                       role="button"
                       className="px-3 py-1 pt-2 "
@@ -221,7 +221,7 @@ export default function QuestionsList() {
                         setSelectedQuestion(quest);
                       }}
                     >
-                      <div className="dropdown-div flex flex-col items-center gap-1 ">
+                      <div className="flex flex-col items-center gap-1 dropdown-div ">
                         <i className="fa-solid fa-eye"></i>
                         {window.innerWidth < 650 ? "" : <span>View</span>}
                       </div>
@@ -236,7 +236,7 @@ export default function QuestionsList() {
                     >
                       <div
                         role="button"
-                        className="dropdown-div flex flex-col items-center gap-1"
+                        className="flex flex-col items-center gap-1 dropdown-div"
                       >
                         <i className="fa-solid fa-pen-to-square"></i>
                         {window.innerWidth < 650 ? "" : <span>Edit</span>}
@@ -252,7 +252,7 @@ export default function QuestionsList() {
                     >
                       <div
                         role="button"
-                        className="dropdown-div flex flex-col items-center gap-1"
+                        className="flex flex-col items-center gap-1 dropdown-div"
                       >
                         <i className="fa fa-trash "></i>
                         {window.innerWidth < 650 ? "" : <span>Delete</span>}
@@ -284,7 +284,7 @@ export default function QuestionsList() {
       >
         <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-30" />
 
-        <DialogPanel className="relative w-full max-w-md sm:max-w-lg m-auto mt-20 rounded-lg overflow-hidden bg-white shadow-lg">
+        <DialogPanel className="relative w-full max-w-md m-auto mt-20 overflow-hidden bg-white rounded-lg shadow-lg sm:max-w-lg">
           <div className="p-4 sm:p-6">
             <DialogTitle className="text-xl font-semibold text-gray-800">
               {openDeleteModal
@@ -304,7 +304,7 @@ export default function QuestionsList() {
                   </p>
                 ) : (
                   <>
-                    <div className="mb-4 flex flex-col gap-5 items-center formBody">
+                    <div className="flex flex-col items-center gap-5 mb-4 formBody">
                       <div className="relative w-full">
                         <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
                           Title
@@ -315,7 +315,7 @@ export default function QuestionsList() {
                           defaultValue={
                             openEditModal ? selectedQuestion.title : ""
                           }
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-16 sm:pl-20 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm "
+                          className="block w-full px-3 py-2 pl-16 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-20 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm "
                           data-attr="title"
                         />
                       </div>
@@ -329,12 +329,12 @@ export default function QuestionsList() {
                           defaultValue={
                             openEditModal ? selectedQuestion.description : ""
                           }
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none  focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pl-32 sm:pl-36 h-full"
+                          className="block w-full h-full px-3 py-2 pl-32 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm sm:pl-36"
                           data-attr="description"
                         />
                       </div>
-                      <div className="answers w-full flex items-center justify-center gap-4">
-                        <div className="flex items-center flex-col w-full gap-2">
+                      <div className="flex items-center justify-center w-full gap-4 answers">
+                        <div className="flex flex-col items-center w-full gap-2">
                           <div className="relative w-full">
                             <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
                               A
@@ -345,7 +345,7 @@ export default function QuestionsList() {
                               defaultValue={
                                 openEditModal ? selectedQuestion.options.A : ""
                               }
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                               data-attr="a"
                             />
                           </div>
@@ -359,12 +359,12 @@ export default function QuestionsList() {
                               defaultValue={
                                 openEditModal ? selectedQuestion.options.B : ""
                               }
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                               data-attr="b"
                             />
                           </div>
                         </div>
-                        <div className="flex items-center flex-col gap-2 w-full">
+                        <div className="flex flex-col items-center w-full gap-2">
                           <div className="relative w-full">
                             <span className="absolute top-0 left-0 h-full flex items-center pl-2 text-md font-bold bg-[#FFEDDF]  pr-4 sm:pr-8 rounded-lg">
                               C
@@ -375,7 +375,7 @@ export default function QuestionsList() {
                               defaultValue={
                                 openEditModal ? selectedQuestion.options.C : ""
                               }
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                               data-attr="c"
                             />
                           </div>
@@ -389,14 +389,14 @@ export default function QuestionsList() {
                               defaultValue={
                                 openEditModal ? selectedQuestion.options.D : ""
                               }
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-10 sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              className="block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-16 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                               data-attr="d"
                             />
                           </div>
                         </div>
                       </div>
-                      <div className="correct_answer w-full flex items-center justify-center gap-4">
-                        <div className="relative w-full flex-1">
+                      <div className="flex items-center justify-center w-full gap-4 correct_answer">
+                        <div className="relative flex-1 w-full">
                           <span className="absolute top-0 left-0 h-full flex items-center px-3  pr-4 sm:pr-8 text-md font-bold bg-[#FFEDDF]  rounded-lg">
                             Answer
                           </span>
@@ -406,7 +406,7 @@ export default function QuestionsList() {
                             defaultValue={
                               openEditModal ? selectedQuestion.answer : ""
                             }
-                            className="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none pl-24 sm:pl-28 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className="block px-3 py-2 pl-24 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:pl-28 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             data-attr="answer"
                           />
                         </div>
@@ -416,7 +416,7 @@ export default function QuestionsList() {
                           </span>
                           <select
                             {...register("type")}
-                            className="border border-gray-400 p-2 rounded-md pl-11 sm:pl-20 w-full"
+                            className="w-full p-2 border border-gray-400 rounded-md pl-11 sm:pl-20"
                             data-attr="type"
                           >
                             <option value={"FE"}>FE</option>
@@ -433,7 +433,7 @@ export default function QuestionsList() {
                 <div className="flex justify-end mt-8">
                   <button
                     type="submit"
-                    className="mr-4 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-center"
+                    className="px-4 py-2 mr-4 text-center text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   >
                     {openDeleteModal
                       ? "Delete"
@@ -444,7 +444,7 @@ export default function QuestionsList() {
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 text-center"
+                    className="px-4 py-2 text-center text-gray-800 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                   >
                     Cancel
                   </button>
@@ -458,7 +458,7 @@ export default function QuestionsList() {
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3 w-1/4`}
                       >
-                        <p className="font-bold text-lg">Title</p>
+                        <p className="text-lg font-bold">Title</p>
                       </div>
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3 w-3/4`}
@@ -470,7 +470,7 @@ export default function QuestionsList() {
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
                       >
-                        <p className="font-bold text-lg">Description</p>
+                        <p className="text-lg font-bold">Description</p>
                       </div>
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
@@ -482,7 +482,7 @@ export default function QuestionsList() {
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
                       >
-                        <p className="font-bold text-lg">Difficulty</p>
+                        <p className="text-lg font-bold">Difficulty</p>
                       </div>
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
@@ -494,7 +494,7 @@ export default function QuestionsList() {
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
                       >
-                        <p className="font-bold text-lg">Type</p>
+                        <p className="text-lg font-bold">Type</p>
                       </div>
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
@@ -506,7 +506,7 @@ export default function QuestionsList() {
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
                       >
-                        <p className="font-bold text-lg">instructor</p>
+                        <p className="text-lg font-bold">instructor</p>
                       </div>
                       <div
                         className={`${style.table_cell} border border-gray-300 p-3`}
@@ -519,7 +519,7 @@ export default function QuestionsList() {
                     <button
                       type="button"
                       onClick={handleClose}
-                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 text-center"
+                      className="px-4 py-2 text-center text-gray-800 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                     >
                       Cancel
                     </button>

@@ -163,7 +163,7 @@ export default function QuizzDetails() {
           <li>
             <div className="flex items-center">
               <svg
-                className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+                className="w-3 h-3 mx-1 text-gray-400 rtl:rotate-180"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -177,7 +177,7 @@ export default function QuizzDetails() {
                   d="m1 9 4-4-4-4"
                 />
               </svg>
-              <p className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
+              <p className="text-sm font-medium text-gray-700 ms-1 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">
                 quizz details
               </p>
             </div>
@@ -185,55 +185,55 @@ export default function QuizzDetails() {
         </ol>
       </nav>
 
-      <div className="sm:w-6/12 container p-5 ">
-        <div className="p-5 border  border-gray-300 rounded-lg h-full">
-          <h1 className="font-bold text-2xl text-center container sm:text-left">
+      <div className="container p-5 sm:w-6/12 ">
+        <div className="h-full p-5 border border-gray-300 rounded-lg">
+          <h1 className="container text-2xl font-bold text-center sm:text-left">
             {quizDetails.title}
           </h1>
-          <p className="font-semibold mt-3 mb-5 text-center sm:text-left">
+          <p className="mt-3 mb-5 font-semibold text-center sm:text-left">
             {new Date(quizDetails.schadule).toLocaleString("en-US", {
               dateStyle: "short",
               timeStyle: "short",
             })}
           </p>
-          <div className="flex flex-row mb-5 border border-gray-300 container h-10 rounded-lg lg:w-8/12">
-            <p className="p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">
+          <div className="container flex flex-row h-10 mb-5 border border-gray-300 rounded-lg lg:w-8/12">
+            <p className="w-7/12 h-full p-2 font-bold bg-orange-100 rounded-lg">
               Duration
             </p>
-            <p className="p-2 font-semibold ml-2">{quizDetails.duration}</p>
+            <p className="p-2 ml-2 font-semibold">{quizDetails.duration}</p>
           </div>
-          <div className="flex flex-row mb-5 border border-gray-300 container h-10 rounded-lg lg:w-8/12">
-            <p className="flex p-2 bg-orange-100 font-bold w-full h-full rounded-lg">
+          <div className="container flex flex-row h-10 mb-5 border border-gray-300 rounded-lg lg:w-8/12">
+            <p className="flex w-full h-full p-2 font-bold bg-orange-100 rounded-lg">
               Number of questions
             </p>
-            <p className="p-2 font-semibold ml-2">
+            <p className="p-2 ml-2 font-semibold">
               {quizDetails.questions_number}
             </p>
           </div>
-          <div className="flex flex-row mb-5  border border-gray-300 container h-10 rounded-lg lg:w-8/12">
-            <p className="flex flex-grow p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">
+          <div className="container flex flex-row h-10 mb-5 border border-gray-300 rounded-lg lg:w-8/12">
+            <p className="flex flex-grow w-7/12 h-full p-2 font-bold bg-orange-100 rounded-lg">
               Score per question
             </p>
-            <p className="p-2 font-semibold ml-2">
+            <p className="p-2 ml-2 font-semibold">
               {quizDetails.score_per_question}
             </p>
           </div>
-          <div className="flex flex-col mb-5  border border-gray-300 container h-full rounded-lg lg:w-8/12">
-            <p className="p-2 bg-orange-100 font-bold w-full h-full rounded-lg">
+          <div className="container flex flex-col h-full mb-5 border border-gray-300 rounded-lg lg:w-8/12">
+            <p className="w-full h-full p-2 font-bold bg-orange-100 rounded-lg">
               Description
             </p>
-            <p className="p-2 font-semibold ml-2">{quizDetails.description}</p>
+            <p className="p-2 ml-2 font-semibold">{quizDetails.description}</p>
           </div>
-          {/* <div className="flex flex-row mb-5  border border-gray-300 w-8/12 h-10 rounded-lg">
-            <p className="p-2 bg-orange-100 font-bold w-7/12 h-full rounded-lg">Question bank used</p>
-            <p className="p-2 font-semibold ml-2">{quizDetails}</p>
+          {/* <div className="flex flex-row w-8/12 h-10 mb-5 border border-gray-300 rounded-lg">
+            <p className="w-7/12 h-full p-2 font-bold bg-orange-100 rounded-lg">Question bank used</p>
+            <p className="p-2 ml-2 font-semibold">{quizDetails}</p>
           </div> */}
           <div className="flex justify-end font-bold">
             <button
               onClick={() => {
                 setOpenEditModal(true);
               }}
-              className="flex p-2 border rounded-full bg-black items-center justify-around w-24 text-white"
+              className="flex items-center justify-around w-24 p-2 text-white bg-black border rounded-full"
             >
               <i className="fa-solid fa-pencil"></i>
               <p>Edit</p>
@@ -251,7 +251,7 @@ export default function QuizzDetails() {
       >
         <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-30" />
 
-        <DialogPanel className="relative w-full max-w-md sm:max-w-lg m-auto mt-20 rounded-lg overflow-hidden bg-white shadow-lg">
+        <DialogPanel className="relative w-full max-w-md m-auto mt-20 overflow-hidden bg-white rounded-lg shadow-lg sm:max-w-lg">
           <div className="p-4 sm:p-6">
             <DialogTitle className="text-xl font-semibold text-gray-800">
               Edit Quizz
@@ -283,7 +283,7 @@ export default function QuizzDetails() {
                 <label className="mr-20">Difficulty</label>
               </div> */}
 
-              {/* <div className="mb-4 flex w-full justify-between">
+              {/* <div className="flex justify-between w-full mb-4">
                     
                     <Select
                       closeMenuOnSelect={true}
@@ -332,7 +332,7 @@ export default function QuizzDetails() {
                 <label className="ml-24">Duration</label>
               </div>
 
-              <div className="mb-4 flex w-full justify-between">
+              <div className="flex justify-between w-full mb-4">
                 <Select
                   closeMenuOnSelect={true}
                   components={animatedComponents}
@@ -368,14 +368,14 @@ export default function QuizzDetails() {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="mr-2 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Edit
                 </button>
                 <button
                   type="button"
                   onClick={() => handleClose()}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  className="px-4 py-2 text-gray-800 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                 >
                   Cancel
                 </button>

@@ -202,13 +202,13 @@ const GroupsList = () => {
   }, [selectedGroup, reset, allStudents]);
 
   return (
-    <div className="m-auto flex justify-center">
-      <div className="project-body head-bg mt-5 container rounded-4 shadow px-4 py-5">
+    <div className="flex justify-center m-auto">
+      <div className="container px-4 py-5 mt-5 shadow project-body head-bg rounded-4">
         <div>
           <div className="flex items-center justify-end">
             {/*add btn */}
             <button
-              className="border border-gray-600 rounded-2xl px-4 py-2"
+              className="px-4 py-2 border border-gray-600 rounded-2xl"
               onClick={() => {
                 setOpenAddModal(true);
               }}
@@ -217,7 +217,7 @@ const GroupsList = () => {
             </button>
           </div>
           <section className="my-4">
-            <h1 className="mb-3 text-bold text-xl">Groups List</h1>
+            <h1 className="mb-3 text-xl text-bold">Groups List</h1>
             <ul className={`${style.responsiveTableProjects}`}>
               {groups.length > 0 ? (
                 groups.map((group: GroupInterface) => (
@@ -253,7 +253,7 @@ const GroupsList = () => {
                       className={`${style.col} p-0 flex items-between justify-start sm:justify-end`}
                       data-label="Actions :"
                     >
-                      <ul className="flex items-center justify-center m-0 p-0 gap-3">
+                      <ul className="flex items-center justify-center gap-3 p-0 m-0">
                         {/* Delete button */}
                         <button
                           role="button"
@@ -311,7 +311,7 @@ const GroupsList = () => {
       >
         <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-30" />
 
-        <DialogPanel className="relative w-full max-w-md sm:max-w-lg m-auto mt-20 rounded-lg overflow-hidden bg-white shadow-lg">
+        <DialogPanel className="relative w-full max-w-md m-auto mt-20 overflow-hidden bg-white rounded-lg shadow-lg sm:max-w-lg">
           <div className="p-4 sm:p-6">
             <DialogTitle className="text-xl font-semibold text-gray-800">
               {openDeleteModal
@@ -358,14 +358,14 @@ const GroupsList = () => {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="mr-2 px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   {openDeleteModal ? "Delete" : openEditModal ? "Edit" : "Add"}
                 </button>
                 <button
                   type="button"
                   onClick={() => handleClose()}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                  className="px-4 py-2 text-gray-800 bg-gray-200 rounded-md shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                 >
                   Cancel
                 </button>

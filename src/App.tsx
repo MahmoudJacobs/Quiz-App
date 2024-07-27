@@ -10,7 +10,7 @@ import QuizzDetails from "./Modules/AdminDashboard/Componenets/QuizzDetails/Quiz
 import QuestionsList from "./Modules/AdminDashboard/Componenets/Quizzes/QuestionsList/QuestionsList";
 import QuizzesList from "./Modules/AdminDashboard/Componenets/Quizzes/QuizzesList/QuizzesList";
 import ResultsList from "./Modules/AdminDashboard/Componenets/Results/ResultsList/ResultsList";
-import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList";
+import StudentsList from "./Modules/AdminDashboard/Componenets/Students/StudentsList/StudentsList";
 import ChangePassword from "./Modules/AuthModule/Components/ChangePassword";
 import ForgetPassword from "./Modules/AuthModule/Components/ForgetPassword/ForgetPassword";
 import Login from "./Modules/AuthModule/Components/Login/Login";
